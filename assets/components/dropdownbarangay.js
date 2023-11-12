@@ -24,7 +24,7 @@ const data = [
   { label: 'West Tapinac', value: 'West Tapinac' }
 ];
 
-const DropdownComponent = () => {
+const DropdownComponent = ({ onSelectedValue }) => {
   const [value, setValue] = useState(null);
   const [isFocus, setIsFocus] = useState(false);
 
@@ -48,10 +48,14 @@ const DropdownComponent = () => {
         searchPlaceholder="Search..."
         value={value}
         onFocus={() => setIsFocus(true)}
-        onBlur={() => setIsFocus(false)}
-        onChange={item => {
+        onBlur={() => {
+          setIsFocus(false);
+          onSelectedValue(value);
+        }}
+        onChange={(item) => {
           setValue(item.value);
           setIsFocus(false);
+          onSelectedValue(item.value);
         }}
 
       />

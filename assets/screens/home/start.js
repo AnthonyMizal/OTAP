@@ -1,10 +1,33 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { COLORS } from '../../constants/colors';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {useFonts} from 'expo-font';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Icon2 from 'react-native-vector-icons/MaterialIcons';
-const Start = () => {
+import AsyncStorage from '@react-native-async-storage/async-storage';
+const Start = ({navigation}) => {
+  const [emergency, setEmergerncy] = useState("");
+
+  const sendAmbulance = () => {
+    setEmergerncy("Ambulance");
+  };
+  
+  const sendFiretruck = () => {
+    setEmergerncy("Firetruck");
+  };
+
+  const sendBpat = () => {
+    setEmergerncy("Bpat");
+  };
+
+
+  const getLocation = async () => {
+        const data = JSON.parse(await AsyncStorage.getItem('location'));
+        console.log('Selected Location:', data);
+  };
+
+
+
     let [fontsLoaded] = useFonts({
         'Momcake-Bold': require('../../fonts/Momcake-Bold.otf'),
         'Momcake-Thin': require('../../fonts/Momcake-Thin.otf'),
@@ -22,7 +45,7 @@ const Start = () => {
     return (
       <View style={styles.container}>
 
-                <TouchableOpacity style={styles.box1}>
+                <TouchableOpacity style={styles.box1} onPress={() => {getLocation(); sendAmbulance();}}>
                     <Icon
                     name= 'ambulance'
                     size={50}
@@ -30,7 +53,7 @@ const Start = () => {
                     />
                     <Text style={styles.boxText}>AMBULANCE</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.box2}>
+                <TouchableOpacity style={styles.box2} onPress={() => {getLocation(); sendFiretruck();}}>
                     <Icon
                     name= 'fire'
                     size={50}
@@ -38,7 +61,7 @@ const Start = () => {
                     />
                     <Text style={styles.boxText}>FIRE TRUCK</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.box3}>
+                <TouchableOpacity style={styles.box3} onPress={() => {getLocation(); sendBpat();}}>
                     <Icon2
                     name= 'local-police'
                     size={50}

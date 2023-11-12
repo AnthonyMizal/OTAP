@@ -4,17 +4,68 @@ import { ROUTES } from '../../constants/routes';
 import {useFonts} from 'expo-font';
 import {COLORS} from '../../constants/colors';
 import DropdownComponent from '../../components/dropdownbarangay';
+import axios from 'axios';
 
 const Signup = (props) => {
     const {navigation} = props;
-    const [username, setUsername] = useState("");
+    const [first_name, setFirstname] = useState("");
+    const [last_name, setLastname] = useState("");
+    const [contact_no, setContact] = useState("");
+    const [age, setAge] = useState("");
+    const [barangay, setBarangay] = useState("");
+    const [email, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const onChangeUsernameHandler = (username) => {
-        setUsername(username);
-      };
-      const onChangePasswordHandler = (password) => {
-        setPassword(password);
-      };
+    const [isLoading, setIsLoading] = useState(false);
+
+    const onChangeFirstnameHandler = (first_name) => {
+      setFirstname(first_name);
+    };
+    const onChangeLastnameHandler = (last_name) => {
+      setLastname(last_name);
+    };
+    const onChangeContactHandler = (contact_no) => {
+      setContact(contact_no);
+    };
+    const onChangeAgeHandler = (age) => {
+      setAge(age);
+    };
+    const onChangeBarangayHandler = (barangay) => {
+      setBarangay(barangay);
+
+    };
+    const onChangeUsernameHandler = (email) => {
+      setUsername(email);
+    };
+    const onChangePasswordHandler = (password) => {
+      setPassword(password);
+    };
+
+    const onSubmitFormHandler = async (event) => {
+  
+      setIsLoading(true);
+  
+      try {
+        const response = await axios.post(`http://192.168.18.43:8000/api/register`, {
+          first_name,
+          last_name,
+          contact_no,
+          barangay,
+          email,
+          password
+        });
+  
+        if (response.status === 201) {
+
+          setIsLoading(false);
+
+        } else {
+          throw new Error("An error has occurred");
+        }
+      } catch (error) {
+        alert(error);
+        setIsLoading(false);
+      }
+    };
 
       let [fontsLoaded] = useFonts({
         'Momcake-Bold': require('../../fonts/Momcake-Bold.otf'),
@@ -43,17 +94,25 @@ const Signup = (props) => {
     <Text style={styles.loginTxt2}>O-TAP is your one tap assisstant for emergency.</Text>
 
     <View style={styles.inputWrapper}>
-      <TextInput style={styles.input} placeholder='Name'
-      value={username}
-      onChangeText={onChangeUsernameHandler}
+      <TextInput style={styles.input} placeholder='Firstname'
+      value={first_name}
+      onChangeText={onChangeFirstnameHandler}
+      />
+      <TextInput style={styles.input} placeholder='Lastname'
+      value={last_name}
+      onChangeText={onChangeLastnameHandler}
+      />
+      <TextInput style={styles.input} placeholder='Contact No.'
+      value={contact_no}
+      onChangeText={onChangeContactHandler}
       />
       <TextInput style={styles.input} placeholder='Age'
-      value={username}
-      onChangeText={onChangeUsernameHandler}
+      value={age}
+      onChangeText={onChangeAgeHandler}
       />
-      <DropdownComponent/>
+      <DropdownComponent onSelectedValue={onChangeBarangayHandler} />
       <TextInput style={styles.input} placeholder='Username'
-      value={username}
+      value={email}
       onChangeText={onChangeUsernameHandler}
       />
       <TextInput style={styles.input} placeholder='Password'
@@ -64,7 +123,7 @@ const Signup = (props) => {
    
 
     </View>
-    <TouchableOpacity style={styles.getStartedBtn} onPress={() => navigation.navigate(ROUTES.HOME)}>
+    <TouchableOpacity style={styles.getStartedBtn} onPress={onSubmitFormHandler}>
       <Text style={styles.getStartedTxtLogin}>SIGNUP</Text>
     </TouchableOpacity>
 
