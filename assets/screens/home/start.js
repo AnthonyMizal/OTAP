@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
 import { COLORS } from '../../constants/colors';
 import React, { useEffect, useState } from 'react';
 import {useFonts} from 'expo-font';
@@ -45,8 +45,11 @@ const Start = ({navigation}) => {
 
     return (
       <View style={styles.container}>
-
-                <TouchableOpacity style={styles.box1} onPress={() => {getLocation(); sendAmbulance();}}>
+          <View style={styles.header}>
+            <Image style={styles.headinglogo} source={require('../../otapimages/header.png')} />
+          </View>
+          <View style={styles.buttonContainer}>
+          <TouchableOpacity style={styles.box1} onPress={() => {getLocation(); sendAmbulance();}}>
                     <Icon
                     name= 'ambulance'
                     size={50}
@@ -71,6 +74,8 @@ const Start = ({navigation}) => {
                     <Text style={styles.boxText}>BPSO</Text>
                 </TouchableOpacity>
 
+          </View>
+                
 
       </View>
     )
@@ -79,13 +84,20 @@ const Start = ({navigation}) => {
   const styles = StyleSheet.create({
       container: {
           flex: 1,
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: 20
+      },
+      header: {
+        padding: 14,
+        marginTop: 30,
+        alignItems: 'flex-start'
+      },
+      headinglogo: {
+        width: 230,
+        height: 42,
+        borderWidth: 2,
       },
       box1: {
         width: '80%',
-        height: '20%',
+        height: '22%',
         backgroundColor: '#f77777',
         borderRadius: 20,
         alignItems: 'center',
@@ -93,7 +105,7 @@ const Start = ({navigation}) => {
       },
       box2: {
         width: '80%',
-        height: '20%',
+        height: '22%',
         backgroundColor: '#f7ae77',
         borderRadius: 20,
         alignItems: 'center',
@@ -101,7 +113,7 @@ const Start = ({navigation}) => {
       },
       box3: {
         width: '80%',
-        height: '20%',
+        height: '22%',
         backgroundColor: '#77c0f7',
         borderRadius: 20,
         alignItems: 'center',
@@ -111,6 +123,12 @@ const Start = ({navigation}) => {
         fontFamily: 'Poppins-SemiBold',
         color: COLORS.white,
         fontSize: 20
+      },
+      buttonContainer:{
+        width: '100%',
+        height: '100%',
+        gap: 15,
+        alignItems: 'center'
       }
   })
 

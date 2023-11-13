@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native'
 import React from 'react'
 import { COLORS } from '../../constants/colors'
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -24,6 +24,9 @@ const Profile = () => {
 
   return (
     <View style={styles.container}>
+       <View style={styles.header}>
+            <Image style={styles.headinglogo} source={require('../../otapimages/header.png')} />
+        </View>
       <View style={styles.buttonContainer}>
         <TouchableOpacity style={styles.button}>
           <View style={styles.content}>
@@ -67,7 +70,7 @@ const styles = StyleSheet.create({
     buttonContainer: {
         width:"100%",
         alignItems: 'center',
-        marginTop: 80,
+        marginTop: 10,
         gap: 20
     },
     button: {
@@ -87,7 +90,17 @@ const styles = StyleSheet.create({
       fontFamily: 'CL-Bold',
       fontSize: 17,
       color: '#C19A6B'
-    }
+    },
+    header: {
+      padding: 14,
+      marginTop: 30,
+      alignItems: 'flex-start'
+    },
+    headinglogo: {
+      width: 230,
+      height: 42,
+      borderWidth: 2,
+    },
    
 })
 
