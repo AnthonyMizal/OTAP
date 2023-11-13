@@ -45,6 +45,9 @@ const YourLocation = ({navigation}) => {
   AsyncStorage.setItem('location', JSON.stringify(currentLocation));
   return (
     <View style={styles.container}>
+        <View style={styles.header}>
+            <Image style={styles.headinglogo} source={require('../../otapimages/header.png')} />
+        </View>
       {initialRegion && (
         <MapView style={styles.map} initialRegion={initialRegion}>
           {currentLocation && (
@@ -64,10 +67,18 @@ const YourLocation = ({navigation}) => {
 };
 
 const styles = StyleSheet.create({
+  header: {
+    padding: 14,
+    marginTop: 30,
+    alignItems: 'flex-start'
+  },
+  headinglogo: {
+    width: 230,
+    height: 42,
+    borderWidth: 2,
+  },
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
   },
   map: {
     width: "100%",

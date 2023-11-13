@@ -29,9 +29,10 @@ const Signup = (props) => {
     const onChangeAgeHandler = (age) => {
       setAge(age);
     };
-    const onChangeBarangayHandler = (barangay) => {
-      setBarangay(barangay);
-
+    const onChangeBarangayHandler = (selectedBarangay) => {
+      setBarangay("");
+      setBarangay(selectedBarangay);
+      console.log(selectedBarangay);
     };
     const onChangeUsernameHandler = (email) => {
       setUsername(email);
