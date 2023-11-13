@@ -5,6 +5,7 @@ import {useFonts} from 'expo-font';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Icon2 from 'react-native-vector-icons/MaterialIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
 const Start = ({navigation}) => {
   const [emergency, setEmergerncy] = useState("");
 
@@ -26,8 +27,6 @@ const Start = ({navigation}) => {
         console.log('Selected Location:', data);
   };
 
-
-
     let [fontsLoaded] = useFonts({
         'Momcake-Bold': require('../../fonts/Momcake-Bold.otf'),
         'Momcake-Thin': require('../../fonts/Momcake-Thin.otf'),
@@ -42,6 +41,8 @@ const Start = ({navigation}) => {
       if (!fontsLoaded) {
         return null;
       }
+
+
     return (
       <View style={styles.container}>
 

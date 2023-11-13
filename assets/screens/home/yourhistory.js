@@ -1,24 +1,39 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View, ScrollView } from 'react-native'
 import React from 'react'
+import HistoryBox from '../../components/historybox'
 
 const YourHistory = () => {
     return (
-      <View style={styles.container}>
-        <Text style={styles.text}>YourHistory</Text>
-      </View>
+      <ScrollView style={styles.container}>
+        <View style={styles.boxContainer}>
+            <HistoryBox style={styles.box}/>
+            <HistoryBox style={styles.box}/>
+            <HistoryBox style={styles.box}/>
+            <HistoryBox style={styles.box}/>
+            <HistoryBox style={styles.box}/>
+            <HistoryBox style={styles.box}/>
+            <HistoryBox style={styles.box}/>
+            <HistoryBox style={styles.box}/>
+            <HistoryBox style={styles.box}/>
+            <HistoryBox style={styles.box}/>
+            <HistoryBox style={styles.box}/>
+            <HistoryBox style={styles.box}/>
+        </View>
+      </ScrollView>
     )
   }
   
   const styles = StyleSheet.create({
       container: {
-          flex: 1,
-          alignItems: 'center',
-        justifyContent: 'center'
+        flex: 1,
       },
-      text: {
+      boxContainer: {
+        width: '100%',
         alignItems: 'center',
-        justifyContent: 'center'
-    }
+        marginTop: 80,
+        gap: 20,
+      },
+
   })
   
   export default YourHistory;
