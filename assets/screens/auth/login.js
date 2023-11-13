@@ -3,6 +3,8 @@ import React, {useState} from 'react';
 import { ROUTES } from '../../constants/routes';
 import {useFonts} from 'expo-font';
 import {COLORS} from '../../constants/colors';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 
 const Login = (props) => {
     const {navigation} = props;
