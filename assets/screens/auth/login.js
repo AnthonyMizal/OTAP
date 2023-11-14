@@ -3,19 +3,47 @@ import React, {useState} from 'react';
 import { ROUTES } from '../../constants/routes';
 import {useFonts} from 'expo-font';
 import {COLORS} from '../../constants/colors';
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from 'axios';
 
 
 const Login = (props) => {
     const {navigation} = props;
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const onChangeUsernameHandler = (username) => {
-        setUsername(username);
-      };
-      const onChangePasswordHandler = (password) => {
-        setPassword(password);
-      };
+    const onSubmitFormHandler = async ()=>{
+      try {
+        const response = await axios.post('http://192.168.100.181:8000/api/login', {
+          email,
+          password,
+        });
+  
+        console.log(response.data); // Handle success response
+      } catch (error) {
+        console.error('Login failed:', error.response.data); // Handle error response
+      }
+
+      // if(!username.trim()||!password.trim()){
+      //   alert("Username or Password is invalid");
+      // return;
+      // }
+      // try{
+      //   const response = await axios.post(`http://192.168.100.181:8000/api/login`,{
+      //     username: username,
+      //     password: password,
+      //   });
+      //   if(response.status===200){
+      //     setUsername('');
+      //     setPassword('');
+      //     alert(`Welcome ` + username + "!");
+      //     return navigation.navigate(ROUTES.HOME_NAVIGATOR)
+      //   }
+      //    else{
+      //     throw new Error("An Error Occured");
+      //   }
+      // }catch(error){
+      //   alert("Invalid Username or Password");
+      // }
+    };
 
       let [fontsLoaded] = useFonts({
         'Momcake-Bold': require('../../fonts/Momcake-Bold.otf'),
@@ -50,17 +78,17 @@ const Login = (props) => {
    
       <TextInput style={styles.input} placeholder='Username'
       value={username}
-      onChangeText={onChangeUsernameHandler}
+      onChangeText={text => setUsername(text)}
       />
       <TextInput style={styles.input} placeholder='Password'
       secureTextEntry
       value={password}
-      onChangeText={onChangePasswordHandler}
+      onChangeText={text => setPassword(text)}
       />
    
 
     </View>
-    <TouchableOpacity style={styles.getStartedBtn} onPress={() => navigation.navigate(ROUTES.HOME_NAVIGATOR)}>
+    <TouchableOpacity style={styles.getStartedBtn} onPress={onSubmitFormHandler}>
       <Text style={styles.getStartedTxtLogin}>LOGIN</Text>
     </TouchableOpacity>
 
