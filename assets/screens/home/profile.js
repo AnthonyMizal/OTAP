@@ -38,16 +38,7 @@ const Profile = () => {
               <Text style={styles.text}>Edit your profile</Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
-          <View style={styles.content}>
-                <Icon
-                  name="person-circle"
-                  size={34}
-                  color={COLORS.primary}
-                />
-              <Text style={styles.text}>Edit your profile</Text>
-          </View>
-        </TouchableOpacity>
+
         <TouchableOpacity style={styles.button}>
           <View style={styles.content}>
                 <Icon

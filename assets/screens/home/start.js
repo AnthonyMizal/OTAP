@@ -5,26 +5,56 @@ import {useFonts} from 'expo-font';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Icon2 from 'react-native-vector-icons/MaterialIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 
 const Start = ({navigation}) => {
   const [emergency, setEmergerncy] = useState("");
 
   const sendAmbulance = () => {
-    setEmergerncy("Ambulance");
+    setEmergerncy("Requesting for Ambulance");
   };
   
   const sendFiretruck = () => {
-    setEmergerncy("Firetruck");
+    setEmergerncy("Requesting for a Fire Truck");
   };
 
   const sendBpat = () => {
-    setEmergerncy("Bpat");
+    setEmergerncy("Requesting for a Barangay Public Safety Officer");
   };
 
 
   const getLocation = async () => {
-        const data = JSON.parse(await AsyncStorage.getItem('location'));
-        console.log('Selected Location:', data);
+        const location = JSON.parse(await AsyncStorage.getItem('location'));
+        const user_id = JSON.parse(await AsyncStorage.getItem('user_id'));
+        console.log('Selected Location:', location.latitude);
+        console.log('ID:', user_id);
+  };
+
+  const sendEmergency = async () => {
+
+    const location = JSON.parse(await AsyncStorage.getItem('location'));
+    const user_id = JSON.parse(await AsyncStorage.getItem('user_id'));
+    const status = "Pending";
+    console.log(user_id, emergency, status, location.latitude, location.longitude)
+    try {
+
+      const response = await axios.post('http://192.168.18.43:8000/api/sendreport', {
+        residents_id:user_id,
+        type:emergency,
+        status:status,
+        latitude:location.latitude,
+        longitude:location.longitude,
+      }, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      console.log('Response:', response.data);
+    } catch (error) {
+   
+      console.error('Error sending data to the server:', error);
+    }
   };
 
     let [fontsLoaded] = useFonts({
@@ -49,7 +79,7 @@ const Start = ({navigation}) => {
             <Image style={styles.headinglogo} source={require('../../otapimages/header.png')} />
           </View>
           <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.box1} onPress={() => {getLocation(); sendAmbulance();}}>
+          <TouchableOpacity style={styles.box1} onPress={() => {sendEmergency(); sendAmbulance();}}>
                     <Icon
                     name= 'ambulance'
                     size={50}
@@ -57,7 +87,7 @@ const Start = ({navigation}) => {
                     />
                     <Text style={styles.boxText}>AMBULANCE</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.box2} onPress={() => {getLocation(); sendFiretruck();}}>
+                <TouchableOpacity style={styles.box2} onPress={() => {sendEmergency(); sendFiretruck();}}>
                     <Icon
                     name= 'fire'
                     size={50}
@@ -65,7 +95,7 @@ const Start = ({navigation}) => {
                     />
                     <Text style={styles.boxText}>FIRE TRUCK</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.box3} onPress={() => {getLocation(); sendBpat();}}>
+                <TouchableOpacity style={styles.box3} onPress={() => {sendEmergency(); sendBpat();}}>
                     <Icon2
                     name= 'local-police'
                     size={50}

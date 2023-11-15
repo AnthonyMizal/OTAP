@@ -4,7 +4,7 @@ import { ROUTES } from '../../constants/routes';
 import {useFonts} from 'expo-font';
 import {COLORS} from '../../constants/colors';
 import axios from 'axios';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const Login = (props) => {
     const {navigation} = props;
     const [email, setEmail] = useState("");
@@ -33,7 +33,7 @@ const Login = (props) => {
     
       const handleLogin = async () => {
         try {
-          const response = await axios.post('http://192.168.100.8:8000/api/userlogin', {
+          const response = await axios.post('http://192.168.18.43:8000/api/userlogin', {
             email,
             password,
           });
@@ -41,35 +41,26 @@ const Login = (props) => {
             ToastAndroid.show('Succesfully Logged In!', ToastAndroid.SHORT);
             const token = response.data.token;
             console.log(token);
-            // console.log(response.data.payload.id);
             setEmail('');
             setPassword('');
-            // return navigation.navigate(ROUTES.LOGIN);
-            console.log(response.data.payload[0].id);
-    
+            console.log(response.data.user.id);
+            AsyncStorage.setItem('user_id', JSON.stringify(response.data.user.id));
             // alert(storeUser);
-            return navigation.navigate(ROUTES.HOME_NAVIGATOR)
+            return navigation.navigate(ROUTES.HOME_NAVIGATOR);
     
           } else {
             throw new Error("An error has occurred");
           }
-          // Assuming your API returns a token upon successful login
-          
-          // Save the token to AsyncStorage or Redux store for future requests
-          // AsyncStorage.setItem('token', token);
-          // or dispatch an action to store the token in Redux
-          
-          // Navigate to the appropriate screen or perform other actions
+
         } catch (error) {
           if (error.response) {
-            // The request was made and the server responded with a status code
-            // that falls out of the range of 2xx
+
             console.log('Login Failed', error.response.data.message);
           } else if (error.request) {
-            // The request was made but no response was received
+  
             console.log('Network Error', 'Please check your internet connection.');
           } else {
-            // Something happened in setting up the request that triggered an Error
+
             console.log('Error', 'An unexpected error occurred.');
           }
         }

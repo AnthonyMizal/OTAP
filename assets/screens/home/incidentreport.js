@@ -1,5 +1,8 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native'
 import React from 'react'
+import { COLORS } from '../../constants/colors'
+import Icon from 'react-native-vector-icons/Ionicons';
+import {useFonts} from 'expo-font';
 
 const IncidentReport = () => {
     return (
