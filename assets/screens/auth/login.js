@@ -5,6 +5,7 @@ import {useFonts} from 'expo-font';
 import {COLORS} from '../../constants/colors';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { baseUrl } from '../../constants/url';
 const Login = (props) => {
     const {navigation} = props;
     const [email, setEmail] = useState("");
@@ -33,7 +34,7 @@ const Login = (props) => {
     
       const handleLogin = async () => {
         try {
-          const response = await axios.post('http://192.168.18.43:8000/api/userlogin', {
+          const response = await axios.post(`${baseUrl}userlogin`, {
             email,
             password,
           });

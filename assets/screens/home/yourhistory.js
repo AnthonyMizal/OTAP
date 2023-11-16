@@ -29,6 +29,7 @@ const YourHistory = () => {
   const styles = StyleSheet.create({
       container: {
         flex: 1,
+        marginBottom: 120
       },
       boxContainer: {
         width: '100%',

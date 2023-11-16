@@ -5,6 +5,7 @@ import {useFonts} from 'expo-font';
 import {COLORS} from '../../constants/colors';
 import DropdownComponent from '../../components/dropdownbarangay';
 import axios from 'axios';
+import { baseUrl } from '../../constants/url';
 
 const Signup = (props) => {
     const {navigation} = props;
@@ -46,7 +47,7 @@ const Signup = (props) => {
       setIsLoading(true);
   
       try {
-        const response = await axios.post(`http://192.168.18.43:8000/api/register`, {
+        const response = await axios.post(`${baseUrl}register`, {
           first_name,
           last_name,
           age,

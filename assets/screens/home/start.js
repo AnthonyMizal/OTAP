@@ -6,9 +6,16 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import Icon2 from 'react-native-vector-icons/MaterialIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-
+import { baseUrl } from '../../constants/url';
 const Start = ({navigation}) => {
   const [emergency, setEmergerncy] = useState("");
+
+  useEffect(() => {
+
+    if (emergency !== "") {
+      sendEmergency();
+    }
+  }, [emergency]);
 
   const sendAmbulance = () => {
     setEmergerncy("Requesting for Ambulance");
@@ -38,7 +45,7 @@ const Start = ({navigation}) => {
     console.log(user_id, emergency, status, location.latitude, location.longitude)
     try {
 
-      const response = await axios.post('http://192.168.18.43:8000/api/sendreport', {
+      const response = await axios.post(`${baseUrl}sendreport`, {
         residents_id:user_id,
         type:emergency,
         status:status,
