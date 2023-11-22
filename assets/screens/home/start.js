@@ -57,10 +57,17 @@ const Start = ({navigation}) => {
         },
       });
 
-      console.log('Response:', response.data);
+      if (response.status == 200) {
+      // The request was successful
+      setEmergerncy("");
+      console.log('Request was successful!');
+    } else {
+      // Handle errors based on the status code
+      console.error('Request failed with status:', response.status);
+    }
     } catch (error) {
    
-      console.error('Error sending data to the server:', error);
+      
     }
   };
 

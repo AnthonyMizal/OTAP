@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import * as Location from "expo-location";
-import MapView, { Marker } from "react-native-maps";
+import MapView, {Marker, PROVIDER_GOOGLE} from "react-native-maps";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const windowWidth = Dimensions.get("window").width;
@@ -27,10 +27,10 @@ const YourLocation = ({navigation}) => {
         console.log("Permission to access location was denied");
         return;
       }
-
+  
       let location = await Location.getCurrentPositionAsync({});
       setCurrentLocation(location.coords);
-      
+  
       setInitialRegion({
         latitude: location.coords.latitude,
         longitude: location.coords.longitude,
@@ -38,9 +38,8 @@ const YourLocation = ({navigation}) => {
         longitudeDelta: 0.005,
       });
     };
-
-    getLocation();
-    
+  
+    getLocation(); // Call the getLocation function once without recursion
   }, []);
   AsyncStorage.setItem('location', JSON.stringify(currentLocation));
   return (
@@ -49,7 +48,12 @@ const YourLocation = ({navigation}) => {
             <Image style={styles.headinglogo} source={require('../../otapimages/header.png')} />
         </View>
       {initialRegion && (
-        <MapView style={styles.map} initialRegion={initialRegion}>
+        <MapView style={styles.map} initialRegion={initialRegion} provider={PROVIDER_GOOGLE}  
+        showsUserLocation={true}
+        zoomEnabled={true}  
+        zoomControlEnabled={true} 
+        mapPadding={{top: 20, right: 20}}
+        >
           {currentLocation && (
             <Marker
               coordinate={{
@@ -65,6 +69,8 @@ const YourLocation = ({navigation}) => {
     </View>
   );
 };
+
+
 
 const styles = StyleSheet.create({
   header: {

@@ -1,11 +1,13 @@
-import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native'
+import { StyleSheet, Text, View, ToastAndroid,TouchableOpacity, Image } from 'react-native'
 import React from 'react'
 import { COLORS } from '../../constants/colors'
 import Icon from 'react-native-vector-icons/Ionicons';
 import {useFonts} from 'expo-font';
+import { ROUTES } from '../../constants/routes';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Profile = () => {
-
+const Profile = (props) => {
+  const {navigation} = props;
   let [fontsLoaded] = useFonts({
     'Momcake-Bold': require('../../fonts/Momcake-Bold.otf'),
     'Momcake-Thin': require('../../fonts/Momcake-Thin.otf'),
@@ -21,6 +23,11 @@ const Profile = () => {
     return null;
   }
 
+const logout = async () => {
+  AsyncStorage.setItem('user_id', JSON.stringify(""));
+  ToastAndroid.show('Logged out!', ToastAndroid.SHORT);
+  return navigation.navigate(ROUTES.LOGIN);
+};
 
   return (
     <View style={styles.container}>
@@ -39,7 +46,7 @@ const Profile = () => {
           </View>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress = {logout}>
           <View style={styles.content}>
                 <Icon
                   name="log-out"

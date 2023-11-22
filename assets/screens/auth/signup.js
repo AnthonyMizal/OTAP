@@ -60,7 +60,8 @@ const Signup = (props) => {
         if (response.status === 201) {
 
           setIsLoading(false);
-
+          ToastAndroid.show('Succesfully Created an Account!', ToastAndroid.SHORT);
+          return navigation.navigate(ROUTES.LOGIN);
         } else {
           throw new Error("An error has occurred");
         }
