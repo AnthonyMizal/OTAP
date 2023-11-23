@@ -1,53 +1,68 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity, ToastAndroid, TextInput, KeyboardAvoidingView, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, Button, ToastAndroid, TextInput, KeyboardAvoidingView, ScrollView } from 'react-native';
 import React, {useState} from 'react';
 import { ROUTES } from '../../constants/routes';
 import {useFonts} from 'expo-font';
 import {COLORS} from '../../constants/colors';
-import DropdownComponent from '../../components/dropdownbarangay';
 import axios from 'axios';
 import { baseUrl } from '../../constants/url';
 
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+
+
 const IncidentReport = (props) => {
   const {navigation} = props;
-  const [first_name, setFirstname] = useState("");
-  const [last_name, setLastname] = useState("");
-  const [contact_no, setContact] = useState("");
-  const [age, setAge] = useState("");
-  const [barangay, setBarangay] = useState("");
-  const [email, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [date, setDate] = useState(new Date());
+  const [time, setTime] = useState(new Date());
+  const [details, setDetails] = useState("");
+  const [addnotes, setNotes] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const [isTimePickerVisible, setTimePickerVisibility] = useState(false);
 
-  const onChangeFirstnameHandler = (first_name) => {
-    setFirstname(first_name);
+  const showDatePicker = () => {
+    setDatePickerVisibility(true);
   };
-  const onChangeLastnameHandler = (last_name) => {
-    setLastname(last_name);
+
+  const hideDatePicker = () => {
+    setDatePickerVisibility(false);
   };
-  const onChangeContactHandler = (contact_no) => {
-    setContact(contact_no);
+
+  const handleDateConfirm = (date) => {
+    hideDatePicker();
+    // Do something with the selected date
+    setDate(date);
   };
-  const onChangeAgeHandler = (age) => {
-    setAge(age);
+
+  const showTimePicker = () => {
+    setTimePickerVisibility(true);
   };
-  const onChangeBarangayHandler = (selectedBarangay) => {
-    setBarangay("");
-    setBarangay(selectedBarangay);
-    console.log(selectedBarangay);
+
+  const hideTimePicker = () => {
+    setTimePickerVisibility(false);
   };
-  const onChangeUsernameHandler = (email) => {
-    setUsername(email);
+
+  const handleTimeConfirm = (time) => {
+    hideTimePicker();
+    // Do something with the selected time
+    setTime(time);
   };
-  const onChangePasswordHandler = (password) => {
-    setPassword(password);
+
+  const onChangeDetailsHandler = (details) => {
+    setDetails(details);
   };
+  const onChangeNotesHandler = (addnotes) => {
+    setNotes(addnotes);
+  };
+
+
+
 
   const onSubmitFormHandler = async (event) => {
 
     setIsLoading(true);
 
     try {
-      const response = await axios.post(`${baseUrl}register`, {
+      const response = await axios.post(`${baseUrl}`, {
         first_name,
         last_name,
         age,
@@ -99,36 +114,52 @@ const IncidentReport = (props) => {
     <Text style={styles.loginTxt}>Incident Report</Text>
     <Text style={styles.loginTxt2}>Send a report to your barangay.</Text>
 
-    <View style={styles.inputWrapper}>
-      <TextInput style={styles.input} placeholder='Firstname'
-      value={first_name}
-      onChangeText={onChangeFirstnameHandler}
-      />
-      <TextInput style={styles.input} placeholder='Lastname'
-      value={last_name}
-      onChangeText={onChangeLastnameHandler}
-      />
-      <TextInput style={styles.input} placeholder='Contact No.'
-      value={contact_no}
-      onChangeText={onChangeContactHandler}
-      />
-      <TextInput style={styles.input} placeholder='Age'
-      value={age}
-      onChangeText={onChangeAgeHandler}
-      />
-      <DropdownComponent onSelectedValue={onChangeBarangayHandler} />
-      <TextInput style={styles.input} placeholder='Username'
-      value={email}
-      onChangeText={onChangeUsernameHandler}
-      />
-      <TextInput style={styles.input} placeholder='Password'
-      secureTextEntry
-      value={password}
-      onChangeText={onChangePasswordHandler}
-      />
-   
 
-    </View>
+   
+    <View style={styles.inputWrapper}>
+    <Text style={styles.loginTxt3}>When Did the Incident/Emergency Happened?</Text>
+      <View style={styles.dateTimeCont}>
+      <TouchableOpacity onPress={showDatePicker}>
+          <Text style={styles.dateTimeInput}>{date ? date.toLocaleDateString() : 'Select Date'}</Text>
+        </TouchableOpacity>
+        <DateTimePickerModal
+          isVisible={isDatePickerVisible}
+          mode="date"
+          onConfirm={handleDateConfirm}
+          onCancel={hideDatePicker}
+        />
+
+        <TouchableOpacity onPress={showTimePicker}>
+          <Text style={styles.dateTimeInput}>{time ? time.toLocaleTimeString() : 'Select Time'}</Text>
+        </TouchableOpacity>
+        <DateTimePickerModal
+          isVisible={isTimePickerVisible}
+          mode="time"
+          onConfirm={handleTimeConfirm}
+          onCancel={hideTimePicker}
+        />
+      </View>
+        
+      <Text style={styles.loginTxt2}>What Happened?</Text>
+        <TextInput
+          style={styles.input}
+          textAlignVertical="top"
+          multiline = {true}
+          numberOfLines = {5}
+          placeholder="Incident Details"
+          value={details}
+          onChangeText={onChangeDetailsHandler}
+        />
+        <TextInput
+          style={styles.input}
+          textAlignVertical="top"
+          multiline = {true}
+          numberOfLines = {3}
+          placeholder="Other notes"
+          value={addnotes}
+          onChangeText={onChangeNotesHandler}
+        />
+      </View>
     <TouchableOpacity style={styles.getStartedBtn} onPress={onSubmitFormHandler}>
       <Text style={styles.getStartedTxtLogin}>SEND REPORT</Text>
     </TouchableOpacity>
@@ -236,10 +267,25 @@ const IncidentReport = (props) => {
       borderWidth: 1,
       borderColor: COLORS.primary,
     },
+
+    dateTimeCont: {
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'space-between'
+    },
+    dateTimeInput:{
+      backgroundColor: COLORS.placeholderBG,
+      borderRadius: 15,
+      padding: 18,
+      borderWidth: 1,
+      borderColor: COLORS.primary,
+      width: 150
+    },
+
     inputWrapper: {
       width: '80%',
       gap: 20,
-      marginTop: 40
+     
     },
     bottomTextCont: {
       alignItems: 'center',
@@ -262,6 +308,12 @@ const IncidentReport = (props) => {
       fontFamily: 'CL-Bold',
       fontSize: 15,
       marginTop: 15
+    },
+    loginTxt3: {
+      color: '#A6A6A6',
+      fontFamily: 'CL-Bold',
+      fontSize: 15,
+      marginTop: 40
     }
   })
   

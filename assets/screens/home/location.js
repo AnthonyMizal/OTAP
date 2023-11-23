@@ -49,7 +49,7 @@ const YourLocation = ({navigation}) => {
         </View>
       {initialRegion && (
         <MapView style={styles.map} initialRegion={initialRegion} provider={PROVIDER_GOOGLE}  
-        showsUserLocation={true}
+        
         zoomEnabled={true}  
         zoomControlEnabled={true} 
         mapPadding={{top: 20, right: 20}}
