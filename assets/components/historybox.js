@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View, FlatList } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View, FlatList, Modal, Pressable, SafeAreaView } from 'react-native';
 import { COLORS } from '../constants/colors';
 import {useFonts} from 'expo-font';
-
+import Icon from 'react-native-vector-icons/Ionicons';
+import MapView from 'react-native-maps';
 
 const HistoryBox = ({data, navigation}) => {
-
+  const [modalVisible, setModalVisible] = useState(false);
     let [fontsLoaded] = useFonts({
         'Momcake-Bold': require('../fonts/Momcake-Bold.otf'),
         'Momcake-Thin': require('../fonts/Momcake-Thin.otf'),
@@ -24,7 +25,8 @@ const HistoryBox = ({data, navigation}) => {
   return (
        <FlatList scrollEnabled={false} data={data} keyExtractor={item => item.id.toString()} renderItem={({item}) => {
            return ( 
-            <TouchableOpacity style={styles.box} key={item.id} onPress={() => {navigation.navigate(ROUTES.RECIPE_DETAILS, item)}}>
+            <SafeAreaView>
+            <TouchableOpacity style={styles.box} key={item.id} onPress={() => setModalVisible(true)}>
                 <View style={styles.rightCont}>
                 {item.type === 'Requesting for a Fire Truck' ? (
                   <View style={styles.lineCondition1}></View>
@@ -42,6 +44,41 @@ const HistoryBox = ({data, navigation}) => {
                     {/* <BookmarkButton data={item.id}/> */}
                 </View>
             </TouchableOpacity> 
+
+              <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {
+                  setModalVisible(!modalVisible);
+              }}>
+              <View style={styles.centeredView}>
+                <View style={styles.modalView}>
+
+                <View style={styles.details}>
+                  
+                      <Text style={styles.emergencydits}><Icon name="megaphone-outline" style={styles.megaphone}/> Emergency Details</Text>
+                  <TouchableOpacity style={styles.buttonClose}
+                      onPress={() => setModalVisible(!modalVisible)}>
+                      <Icon style={styles.exit} name="close-outline"/>
+                  </TouchableOpacity>
+                </View>
+                  
+                  <View style={styles.map}>
+                      <MapView style={styles.googlemap} />
+                  </View>
+
+                  <View style={styles.info}>
+                    <Text style={styles.modalText}><Icon style={styles.infoicon} name="alert-circle"/> Type: </Text>
+                    <Text style={styles.modalText}><Icon style={styles.infoicon} name="person-circle-outline"/> Name: </Text>
+                    <Text style={styles.modalText}><Icon style={styles.infoicon} name="calendar"/> Age: </Text>
+                    <Text style={styles.modalText}><Icon style={styles.infoicon} name="home"/> Address: </Text>
+                  </View>
+                  
+                  </View>
+              </View>
+            </Modal>
+          </SafeAreaView>
             )
     }}/>
   )
@@ -80,6 +117,80 @@ const styles = StyleSheet.create({
     middleCont:{
       alignItems: 'center',
       justifyContent: 'center'
-    }
+    },
+
+
+    centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'column'
+    },
+
+  modalView: {
+    margin: 20,
+    backgroundColor: COLORS.placeholderBG,
+    borderColor: COLORS.primary,
+    borderWidth: 2,
+    borderRadius: 10,
+    padding:20,
+    width: '90%',
+        height: '70%',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 5,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+
+  details:{
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  emergencydits: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  megaphone:{
+    color: 'red',
+    fontSize: 18,
+  },
+  exit: {
+    color: 'red',
+    fontSize: 24,
+  },
+  
+  map: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
     
+  },
+  googlemap: {
+    ...StyleSheet.absoluteFillObject,
+    height: '90%',
+    marginTop: 5,
+  },
+    
+  info:{
+    backgroundColor: '#efefef',
+    padding: 5,
+    borderRadius: 5,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 5,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  infoicon: {
+    color: 'rgb(81, 142, 239)',
+  },
+
 })
