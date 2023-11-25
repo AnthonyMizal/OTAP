@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, ScrollView, Image } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, Image, FlatList } from 'react-native';
 import React, { useState, useEffect} from 'react';
 import HistoryBox from '../../components/historybox';
 import axios from 'axios';
@@ -29,16 +29,20 @@ const YourHistory = () => {
     }, [])
   );
   return (
-    <ScrollView style={styles.container}>
+    <View style={styles.container}>
       <View style={styles.header}>
         <Image style={styles.headinglogo} source={require('../../otapimages/header.png')} />
       </View>
       <View style={styles.boxContainer}>
         
-          <HistoryBox key={historyData.id} data={historyData} style={styles.box} />
+      <FlatList
+        data={historyData}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item }) => <HistoryBox data={item} />}
+      />
           
       </View>
-    </ScrollView>
+    </View>
   );
 };
 
@@ -50,8 +54,8 @@ const styles = StyleSheet.create({
   boxContainer: {
     width: '100%',
     alignItems: 'center',
-    marginTop: 10,
     gap: 20,
+    marginBottom: 80
   },
   header: {
     padding: 14,
