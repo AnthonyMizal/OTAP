@@ -8,7 +8,7 @@ import YourLocation from '../screens/home/location';
 import IncidentReport from '../screens/home/incidentreport';
 import YourHistory from '../screens/home/yourhistory';
 import Profile from '../screens/home/profile';
-
+import TestRealtime from '../screens/home/testrealtime';
 
 
 const Tab = createBottomTabNavigator();
@@ -62,7 +62,7 @@ const BottomTabNavigator = () => {
 
             ),
           }}/>
-      <Tab.Screen name={ROUTES.INCIDENTREPORT} component={IncidentReport} options={{
+      <Tab.Screen name={ROUTES.TEST} component={TestRealtime} options={{
           tabBarShowLabel: true,
 
             tabBarStyle: {

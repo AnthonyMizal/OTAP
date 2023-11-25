@@ -7,7 +7,8 @@ export const ROUTES =  {
     INCIDENTREPORT: 'IncidentReport',
     YOURHISTORY: 'YourHistory',
     PROFILE: 'Profile',
-
+    TEST: 'TestRealtime',
+    
     SEARCH: 'Search',
     ADDRECIPE: 'Addrecipe',
     BOOKMARK: 'Bookmark',
