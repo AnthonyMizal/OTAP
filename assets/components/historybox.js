@@ -26,7 +26,7 @@ const HistoryBox = ({data, navigation}) => {
        <FlatList scrollEnabled={false} data={data} keyExtractor={item => item.id.toString()} renderItem={({item}) => {
            return ( 
             <SafeAreaView>
-            <TouchableOpacity style={styles.box} key={item.id} onPress={() => setModalVisible(true)}>
+            <TouchableOpacity style={styles.box} key={item.id} onPress={() => {setModalVisible(true); handleItemPress(item);}}>
                 <View style={styles.rightCont}>
                 {item.type === 'Requesting for a Fire Truck' ? (
                   <View style={styles.lineCondition1}></View>
