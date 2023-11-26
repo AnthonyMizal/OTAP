@@ -5,12 +5,14 @@ import {useFonts} from 'expo-font';
 import {COLORS} from '../../constants/colors';
 import axios from 'axios';
 import { baseUrl } from '../../constants/url';
-
+import * as ImagePicker from 'expo-image-picker';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-
-
+import { AntDesign } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import mime from "mime";
 const IncidentReport = (props) => {
   const {navigation} = props;
+  const [file, setFile] = useState([])
   const [date, setDate] = useState(new Date());
   const [time, setTime] = useState(new Date());
   const [details, setDetails] = useState("");
@@ -18,7 +20,35 @@ const IncidentReport = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [isTimePickerVisible, setTimePickerVisibility] = useState(false);
+  const [image, setImagePath] = useState(null);
+  const [imageName, setImageName] = useState(null);
+  const [imageType, setImageType] = useState(null);
 
+
+  const addImage = async () => {
+    let _image = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [4,3],
+        quality: 1,
+    });
+
+    if (!_image.canceled) {
+  
+      setImagePath(_image.assets[0].uri);
+      setImageType(_image.assets[0].type);
+      let path = _image.assets[0].uri;
+        if (Platform.OS === "ios") {
+        path = "~" + path.substring(path.indexOf("/Documents"));
+        }
+        if (!_image.assets[0].fileName){
+            new_path = path.split("/").pop();
+        } 
+      setImageName(new_path);
+
+      
+    }
+  }
   const showDatePicker = () => {
     setDatePickerVisibility(true);
   };
@@ -61,23 +91,42 @@ const IncidentReport = (props) => {
 
     setIsLoading(true);
 
+    const formattedDate = date.toISOString().split('T')[0];
+    const formattedTime = time.toISOString().split('T')[1].substring(0, 8);
+    const location = JSON.parse(await AsyncStorage.getItem('location'));
+    const user_id = JSON.parse(await AsyncStorage.getItem('user_id'));
+    const status = "Pending";
+    console.log(user_id, formattedDate, formattedTime, location.longitude, location.latitude, details, addnotes, status, imageName, image, imageType)
+    
     try {
-      const response = await axios.post(`${baseUrl}`, {
-        first_name,
-        last_name,
-        age,
-        contact_no,
-        barangay,
-        email,
-        password
+      
+      const data = new FormData();
+      data.append('file', {
+        uri: image,
+        name: imageName,
+        type: `image/${imageType}`,
       });
-
+      data.append('residents_id', user_id);
+      data.append('datehappened', formattedDate);
+      data.append('timehappened', formattedTime);
+      data.append('longitude', location.longitude);
+      data.append('latitude', location.latitude);
+      data.append('details', details);
+      data.append('addnotes', addnotes);
+      data.append('status', status);
+  
+      // Logging formData after it is defined
+      console.log(data);
+     
+      const response = await axios.post('http://192.168.18.43:8000/api/reportincident', data, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
       if (response.status === 201) {
-
         setIsLoading(false);
-
       } else {
-        throw new Error("An error has occurred");
+        throw new Error('An error has occurred');
       }
     } catch (error) {
       alert(error);
@@ -103,6 +152,7 @@ const IncidentReport = (props) => {
       <View style={styles.container}>
 
           <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+            
       <KeyboardAvoidingView 
                   style={styles.keyboardView}>
             <View style={styles.header}>
@@ -114,7 +164,18 @@ const IncidentReport = (props) => {
     <Text style={styles.loginTxt}>Incident Report</Text>
     <Text style={styles.loginTxt2}>Send a report to your barangay.</Text>
 
-
+    <View style={imageUploaderStyles.container}>
+                {
+                    image  && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />
+                }
+                    <View style={imageUploaderStyles.uploadBtnContainer}>
+                        <TouchableOpacity onPress={addImage} style={imageUploaderStyles.uploadBtn} >
+                            <Text>{image? 'Edit' : 'Upload'} Image</Text>
+                            <AntDesign name="camera" size={20} color="black" />
+                        </TouchableOpacity>
+                        
+                    </View>
+            </View>
    
     <View style={styles.inputWrapper}>
     <Text style={styles.loginTxt3}>When Did the Incident/Emergency Happened?</Text>
@@ -172,6 +233,32 @@ const IncidentReport = (props) => {
     )
   }
   
+  const imageUploaderStyles=StyleSheet.create({
+    container:{
+        elevation:2,
+        height:200,
+        width:200,
+        backgroundColor:'#efefef',
+        position:'relative',
+        overflow:'hidden',
+        alignSelf: 'center'
+    },
+    uploadBtnContainer:{
+        opacity:0.7,
+        position:'absolute',
+        right:0,
+        bottom:0,
+        backgroundColor:'lightgrey',
+        width:'100%',
+        height:'25%',
+    },
+    uploadBtn:{
+        display:'flex',
+        alignItems:"center",
+        justifyContent:'center'
+    }
+})
+
   const styles = StyleSheet.create({
     container: {
       flex: 1,

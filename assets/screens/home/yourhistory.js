@@ -37,6 +37,7 @@ const YourHistory = () => {
         
       <FlatList
         data={historyData}
+        showsVerticalScrollIndicator={false}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => <HistoryBox data={item} />}
       />
@@ -61,6 +62,7 @@ const styles = StyleSheet.create({
     padding: 14,
     marginTop: 30,
     alignItems: 'flex-start',
+
   },
   headinglogo: {
     width: 230,
