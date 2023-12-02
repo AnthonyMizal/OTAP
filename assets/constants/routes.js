@@ -7,7 +7,9 @@ export const ROUTES =  {
     INCIDENTREPORT: 'IncidentReport',
     YOURHISTORY: 'YourHistory',
     PROFILE: 'Profile',
-
+    EDIT_PROFILE: 'EditProfile',
+    PROFILENAVIGATOR: 'ProfileNavigator',
+    
     SEARCH: 'Search',
     ADDRECIPE: 'Addrecipe',
     BOOKMARK: 'Bookmark',

@@ -35,7 +35,7 @@ const logout = async () => {
             <Image style={styles.headinglogo} source={require('../../otapimages/header.png')} />
         </View>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress ={()=>navigation.navigate(ROUTES.EDIT_PROFILE)}>
           <View style={styles.content}>
                 <Icon
                   name="person-circle"
