@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import * as Location from "expo-location";
-import MapView, {Marker} from "react-native-maps";
+import MapView, {Marker, PROVIDER_GOOGLE} from "react-native-maps";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const windowWidth = Dimensions.get("window").width;
@@ -51,7 +51,7 @@ const YourLocation = ({navigation}) => {
             <Image style={styles.headinglogo} source={require('../../otapimages/header.png')} />
         </View>
       {initialRegion && (
-        <MapView style={styles.map} initialRegion={initialRegion}  
+        <MapView style={styles.map} initialRegion={initialRegion} provider={PROVIDER_GOOGLE}  
         
         zoomEnabled={true}  
         zoomControlEnabled={true} 

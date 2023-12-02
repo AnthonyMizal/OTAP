@@ -3,7 +3,7 @@ import { StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View, Fla
 import { COLORS } from '../constants/colors';
 import {useFonts} from 'expo-font';
 import Icon from 'react-native-vector-icons/Ionicons';
-import MapView, {Marker} from 'react-native-maps';
+import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 
 const HistoryBox = ({data, navigation}) => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -118,7 +118,7 @@ const HistoryBox = ({data, navigation}) => {
                     
                
                   <View style={styles.map}>
-                      <MapView style={styles.googlemap} initialRegion={initialRegion}>
+                      <MapView style={styles.googlemap} initialRegion={initialRegion} provider={PROVIDER_GOOGLE}>
                       <Marker
                         coordinate={{
                           latitude: data.latitude,
