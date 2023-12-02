@@ -118,13 +118,15 @@ const IncidentReport = (props) => {
       // Logging formData after it is defined
       console.log(data);
      
-      const response = await axios.post('http://192.168.18.43:8000/api/reportincident', data, {
+      const response = await axios.post(`${baseUrl}reportincident`, data, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
       if (response.status === 201) {
         setIsLoading(false);
+        ToastAndroid.show('Succesfully Reported an Incident!', ToastAndroid.SHORT);
+        return navigation.navigate(ROUTES.HOME_NAVIGATOR);
       } else {
         throw new Error('An error has occurred');
       }

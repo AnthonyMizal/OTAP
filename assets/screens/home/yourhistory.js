@@ -12,7 +12,6 @@ const YourHistory = () => {
     try {
       const storedUserId = await AsyncStorage.getItem('user_id');
       const response = await axios.get(`${baseUrl}emergency/${storedUserId}`); // Replace with your actual API endpoint
-      console.log(response.data.history);
       setHistoryData(response.data.history);
     } catch (error) {
       console.error('Error fetching data:', error);
