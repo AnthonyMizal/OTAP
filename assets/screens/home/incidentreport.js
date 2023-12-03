@@ -120,7 +120,7 @@ const IncidentReport = (props) => {
           'Content-Type': 'multipart/form-data',
         },
       });
-      if (response.status === 201) {
+      if (response.status === 200) {
         setIsLoading(false);
         ToastAndroid.show('Succesfully Reported an Incident!', ToastAndroid.SHORT);
         return navigation.navigate(ROUTES.HOME_NAVIGATOR);
