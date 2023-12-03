@@ -4,14 +4,14 @@ import { COLORS } from '../constants/colors';
 import {useFonts} from 'expo-font';
 import Icon from 'react-native-vector-icons/Ionicons';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
-
+import axios from 'axios';
+import { baseUrl } from '../constants/url';
 const HistoryBox = ({data, navigation}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [initialRegion, setInitialRegion] = useState(null);
 
   useEffect(() => {
     const getLocation = async () => {
-    
   
       setInitialRegion({
         latitude: data.latitude,
@@ -21,8 +21,19 @@ const HistoryBox = ({data, navigation}) => {
       });
     };
   
-    getLocation(); // Call the getLocation function once without recursion
+    getLocation(); 
   }, []);
+
+  const patchCancelled = async (id) => {
+  
+    try {
+      const response = await axios.patch(`${baseUrl}cancelled/${id}`);
+      return response.data; 
+    } catch (error) {
+      console.error('Error making PATCH request:', error);
+      throw error;
+    }
+  };
 
     let [fontsLoaded] = useFonts({
         'Momcake-Bold': require('../fonts/Momcake-Bold.otf'),
@@ -94,6 +105,11 @@ const HistoryBox = ({data, navigation}) => {
                     <View style={styles.respondingCircle}></View>
                     <Text style={styles.respondingStatus}>{data.status}</Text>
                   </View>
+                ) : data.status === 'Cancelled' ? (
+                  <View style={styles.cancelledCont}>
+                    <View style={styles.cancelledCircle}></View>
+                    <Text style={styles.cancelledStatus}>{data.status}</Text>
+                  </View>
                 ) : (
                   <View style={styles.completedCont}>
                     <View style={styles.completedCircle}></View>
@@ -131,7 +147,7 @@ const HistoryBox = ({data, navigation}) => {
 
                   <View style={styles.info}>
                   <Text style={styles.btnTxt}>Cancel your request?</Text>
-                  <TouchableOpacity style={styles.getStartedBtn}>
+                  <TouchableOpacity style={styles.getStartedBtn} onPress={() => patchCancelled(data.id)}>
                     <Text style={styles.getStartedTxtLogin}>ABORT</Text>
                   </TouchableOpacity>
                   </View>
@@ -339,6 +355,32 @@ textCont: {
     textAlign: 'center',
     textTransform: 'uppercase',
     color: '#f54260',
+    fontSize: 12
+  },
+  cancelledCont: {
+    borderWidth: 1,
+    borderColor: '#7a7979',
+    justifyContent: 'space-around',
+    width: "33%",
+    borderRadius: 15,
+    textAlign: 'right',
+    padding: 6,
+    backgroundColor: '#e8e8e8',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 3
+  },
+  cancelledCircle: {
+    width: 10,
+    height: 10,
+    backgroundColor: '#7a7979',
+    borderRadius: 100
+  },
+  cancelledStatus:{
+    textAlign: 'center',
+    textTransform: 'uppercase',
+    color: '#7a7979',
     fontSize: 12
   },
   respondingCont: {

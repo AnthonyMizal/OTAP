@@ -8,7 +8,7 @@ import YourLocation from '../screens/home/location';
 import IncidentReport from '../screens/home/incidentreport';
 import YourHistory from '../screens/home/yourhistory';
 import Profile from '../screens/home/profile';
-
+import ProfileNavigator from './ProfileNavigator';
 
 
 const Tab = createBottomTabNavigator();
@@ -64,7 +64,6 @@ const BottomTabNavigator = () => {
           }}/>
       <Tab.Screen name={ROUTES.INCIDENTREPORT} component={IncidentReport} options={{
           tabBarShowLabel: true,
-
             tabBarStyle: {
               display: "none",
             },
@@ -87,7 +86,7 @@ const BottomTabNavigator = () => {
               </View>
             ),
           }}/>
-      <Tab.Screen name={ROUTES.PROFILE} component={Profile} options={{
+      <Tab.Screen name={ROUTES.PROFILENAVIGATOR} component={ProfileNavigator} options={{
             tabBarIcon: ({focused}) => (
               <View
                 style={{

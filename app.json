@@ -25,9 +25,12 @@
         "googleMapsApiKey": "AIzaSyB3sNbXeLLaZQcJiCWNzC4Rwp-xALyV4lM"
       },
       "package": "com.anthonymizal.OTAP",
-      "config": { "googleMaps": { "apiKey": "AIzaSyB3sNbXeLLaZQcJiCWNzC4Rwp-xALyV4lM" }    }
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyB3sNbXeLLaZQcJiCWNzC4Rwp-xALyV4lM"
+        }
+      }
     },
-    
     "web": {
       "favicon": "./assets/favicon.png"
     },

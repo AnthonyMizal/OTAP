@@ -33,7 +33,6 @@ const Signup = (props) => {
     const onChangeBarangayHandler = (selectedBarangay) => {
       setBarangay("");
       setBarangay(selectedBarangay);
-      console.log(selectedBarangay);
     };
     const onChangeUsernameHandler = (email) => {
       setUsername(email);
@@ -92,6 +91,7 @@ const Signup = (props) => {
       <KeyboardAvoidingView 
                   style={styles.keyboardView}>
     <View style={styles.box}>
+
     </View>
     
     <Text style={styles.loginTxt}>Register to O-TAP!</Text>

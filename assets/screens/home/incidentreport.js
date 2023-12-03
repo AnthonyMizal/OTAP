@@ -59,7 +59,6 @@ const IncidentReport = (props) => {
 
   const handleDateConfirm = (date) => {
     hideDatePicker();
-    // Do something with the selected date
     setDate(date);
   };
 
@@ -73,7 +72,6 @@ const IncidentReport = (props) => {
 
   const handleTimeConfirm = (time) => {
     hideTimePicker();
-    // Do something with the selected time
     setTime(time);
   };
 
@@ -115,8 +113,7 @@ const IncidentReport = (props) => {
       data.append('addnotes', addnotes);
       data.append('status', status);
   
-      // Logging formData after it is defined
-      console.log(data);
+
      
       const response = await axios.post(`${baseUrl}reportincident`, data, {
         headers: {

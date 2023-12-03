@@ -39,7 +39,7 @@ const YourLocation = ({navigation}) => {
       });
     };
   
-    getLocation(); // Call the getLocation function once without recursion
+    getLocation();
   }, []);
 
 
@@ -68,7 +68,6 @@ const YourLocation = ({navigation}) => {
           )}
         </MapView>
       )}
-      {/* Rest of your code */}
     </View>
   );
 };

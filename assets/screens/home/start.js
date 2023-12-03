@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, ToastAndroid, View, Image } from 'react-native';
 import { COLORS } from '../../constants/colors';
 import React, { useEffect, useState } from 'react';
 import {useFonts} from 'expo-font';
@@ -9,7 +9,7 @@ import axios from 'axios';
 import { baseUrl } from '../../constants/url';
 const Start = ({navigation}) => {
   const [emergency, setEmergerncy] = useState("");
-
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   useEffect(() => {
 
     if (emergency !== "") {
@@ -42,7 +42,7 @@ const Start = ({navigation}) => {
     const location = JSON.parse(await AsyncStorage.getItem('location'));
     const user_id = JSON.parse(await AsyncStorage.getItem('user_id'));
     const status = "Pending";
-    console.log(user_id, emergency, status, location.latitude, location.longitude)
+
     try {
 
       const response = await axios.post(`${baseUrl}sendreport`, {
@@ -58,11 +58,13 @@ const Start = ({navigation}) => {
       });
 
       if (response.status == 200) {
-      // The request was successful
       setEmergerncy("");
-      console.log('Request was successful!');
+      ToastAndroid.show('Succesfully sent an emergency!', ToastAndroid.SHORT);
+      setIsButtonDisabled(true); 
+      setTimeout(() => {
+        setIsButtonDisabled(false); 
+      },1 * 60 * 1000);
     } else {
-      // Handle errors based on the status code
       console.error('Request failed with status:', response.status);
     }
     } catch (error) {
@@ -93,7 +95,13 @@ const Start = ({navigation}) => {
             <Image style={styles.headinglogo} source={require('../../otapimages/header.png')} />
           </View>
           <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.box1} onPress={() => {sendEmergency(); sendAmbulance();}}>
+          <TouchableOpacity style={[styles.box1, isButtonDisabled && styles.disabledButton]} onPress={() => {
+            if (!isButtonDisabled) {
+              sendEmergency();
+              sendAmbulance();
+            } 
+          }}
+          disabled={isButtonDisabled}>
                     <Icon
                     name= 'ambulance'
                     size={50}
@@ -101,7 +109,13 @@ const Start = ({navigation}) => {
                     />
                     <Text style={styles.boxText}>AMBULANCE</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.box2} onPress={() => {sendEmergency(); sendFiretruck();}}>
+                <TouchableOpacity style={[styles.box2, isButtonDisabled && styles.disabledButton]} onPress={() => {
+            if (!isButtonDisabled) {
+              sendEmergency();
+              sendFiretruck();
+            }
+          }}
+          disabled={isButtonDisabled}>
                     <Icon
                     name= 'fire'
                     size={50}
@@ -109,7 +123,13 @@ const Start = ({navigation}) => {
                     />
                     <Text style={styles.boxText}>FIRE TRUCK</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.box3} onPress={() => {sendEmergency(); sendBpat();}}>
+                <TouchableOpacity style={[styles.box3, isButtonDisabled && styles.disabledButton]} onPress={() => {
+            if (!isButtonDisabled) {
+              sendEmergency();
+              sendBpat();
+            }
+          }}
+          disabled={isButtonDisabled}>
                     <Icon2
                     name= 'local-police'
                     size={50}
@@ -143,6 +163,14 @@ const Start = ({navigation}) => {
         width: '80%',
         height: '22%',
         backgroundColor: '#f77777',
+        borderRadius: 20,
+        alignItems: 'center',
+        justifyContent: 'center',
+      },
+      disabledButton:{
+        width: '80%',
+        height: '22%',
+        backgroundColor: '#969696',
         borderRadius: 20,
         alignItems: 'center',
         justifyContent: 'center',

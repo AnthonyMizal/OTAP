@@ -6,10 +6,16 @@ import {COLORS} from '../../constants/colors';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { baseUrl } from '../../constants/url';
+import Icon from 'react-native-vector-icons/Ionicons';
 const Login = (props) => {
     const {navigation} = props;
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
+
+    const togglePasswordVisibility = () => {
+      setShowPassword((prevShowPassword) => !prevShowPassword);
+    };
     const onChangeEmailHandler = (email) => {
       setEmail(email);
       };
@@ -41,12 +47,9 @@ const Login = (props) => {
           if (response.status === 200) {
             ToastAndroid.show('Succesfully Logged In!', ToastAndroid.SHORT);
             const token = response.data.token;
-            console.log(token);
             setEmail('');
             setPassword('');
-            console.log(response.data.user.id);
             AsyncStorage.setItem('user_id', JSON.stringify(response.data.user.id));
-            // alert(storeUser);
             return navigation.navigate(ROUTES.HOME_NAVIGATOR);
     
           } else {
@@ -84,17 +87,51 @@ const Login = (props) => {
     <Text style={styles.loginTxt2}>O-TAP is your one tap assisstant for emergency.</Text>
 
     <View style={styles.inputWrapper}>
-   
-      <TextInput style={styles.input} placeholder='Email'
-      value={email}
-      onChangeText={onChangeEmailHandler}
-      />
-      <TextInput style={styles.input} placeholder='Password'
-      secureTextEntry
-      value={password}
-      onChangeText={onChangePasswordHandler}
-      />
-   
+
+      <View style={styles.input}>
+          <Icon
+            name= 'lock-closed'
+            size={25}
+            color={COLORS.primary}
+            />
+          <TextInput style={styles.inputCon} placeholder='Email'
+          value={email}
+          onChangeText={onChangeEmailHandler}
+          />
+      </View>
+      
+
+      <View style={styles.passinput}>
+        <View style={styles.passinputCont}>
+            <Icon
+            name= 'person'
+            size={25}
+            color={COLORS.primary}
+            />
+             <TextInput style={styles.inputCon} placeholder='Password'
+              secureTextEntry={!showPassword}
+              value={password}
+              onChangeText={onChangePasswordHandler}
+              />
+        </View>
+         
+          <TouchableOpacity style={styles.passtoggle} onPress={togglePasswordVisibility}>
+                {showPassword === true ? (
+                  <Icon
+                  name= 'eye-off'
+                  size={25}
+                  color={COLORS.gray}
+                  />
+                  ) : (
+                    <Icon
+                  name= 'eye'
+                  size={25}
+                  color={COLORS.gray}
+                  />
+                  )}
+          </TouchableOpacity>
+      </View>
+      
 
     </View>
     <TouchableOpacity style={styles.getStartedBtn} onPress={handleLogin}>
@@ -195,11 +232,32 @@ const styles = StyleSheet.create({
         fontSize: 16
       },
       input: {
+        display: 'flex',
+        flexDirection: 'row',
         backgroundColor: COLORS.placeholderBG,
         borderRadius: 15,
         padding: 18,
         borderWidth: 1,
         borderColor: COLORS.primary,
+        gap: 7
+      },
+      passinput: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        backgroundColor: COLORS.placeholderBG,
+        borderRadius: 15,
+        padding: 18,
+        borderWidth: 1,
+        borderColor: COLORS.primary,
+      },
+      passinputCont:{
+        display: 'flex',
+        flexDirection: 'row',
+        gap: 7
+      },
+      inputCon:{
+        width: '80%',
       },
       inputWrapper: {
         width: '80%',
