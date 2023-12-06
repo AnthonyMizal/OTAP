@@ -90,7 +90,7 @@ const Login = (props) => {
 
       <View style={styles.input}>
           <Icon
-            name= 'lock-closed'
+            name= 'person'
             size={25}
             color={COLORS.primary}
             />
@@ -104,7 +104,7 @@ const Login = (props) => {
       <View style={styles.passinput}>
         <View style={styles.passinputCont}>
             <Icon
-            name= 'person'
+            name= 'lock-closed'
             size={25}
             color={COLORS.primary}
             />
@@ -234,11 +234,9 @@ const styles = StyleSheet.create({
       input: {
         display: 'flex',
         flexDirection: 'row',
-        backgroundColor: COLORS.placeholderBG,
+        backgroundColor: '#ececec',
         borderRadius: 15,
         padding: 18,
-        borderWidth: 1,
-        borderColor: COLORS.primary,
         gap: 7
       },
       passinput: {
@@ -248,8 +246,7 @@ const styles = StyleSheet.create({
         backgroundColor: COLORS.placeholderBG,
         borderRadius: 15,
         padding: 18,
-        borderWidth: 1,
-        borderColor: COLORS.primary,
+
       },
       passinputCont:{
         display: 'flex',
