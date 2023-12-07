@@ -1,11 +1,32 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Image, ImageBackground, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
+import { StyleSheet, Text, View, Image, ImageBackground, TouchableOpacity, FlatList, Animated } from 'react-native';
 import {COLORS} from '../../constants/colors';
 import {useFonts} from 'expo-font';
 import { ROUTES } from '../../constants/routes';
-
+import slide from '../../components/slide';
+import OnboardingItem from '../../components/OnboardingItem';
+import React, {useRef, useState} from 'react'
+import Paginator from '../../components/Paginator';
+import NextButton from '../../components/NextButton';
 const Getstarted = (props) =>  {
   const {navigation} = props;
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const slidesRef = useRef(null);
+  const scrollX = useRef(new Animated.Value(0)).current;
+
+  const viewableItemsChanged = useRef(({viewableItems}) => {
+    setCurrentIndex(viewableItems[0].index);
+  }).current;
+
+  const viewConfig = useRef({ viewAreaCoveragePercentThreshold: 50 }).current;
+
+  const scrollTo = () => {
+    if (currentIndex < slide.length - 1) {
+      slidesRef.current.scrollToIndex({index: currentIndex + 1})
+    } else {
+      return navigation.navigate(ROUTES.LOGIN);
+    }
+  }
 
   let [fontsLoaded] = useFonts({
     'Momcake-Bold': require('../../fonts/Momcake-Bold.otf'),
@@ -24,25 +45,27 @@ const Getstarted = (props) =>  {
 
     return (
     <View style={styles.container}>
-       <ImageBackground source={require('../../otapimages/bgstart.png')} resizeMode="cover" style={styles.bgimage}>
-      <View style={styles.box}>
-      <Image style={styles.personpng} source={require('../../otapimages/otaplogo.png')} />
-      </View>
-      <View style={styles.textWrapper2}>
-        <Text style={styles.text2}>One-Tap</Text>
-        <Text style={styles.text2}>Emergency</Text>
-        <Text style={styles.text3}>Assistance</Text>
-        <Text style={styles.text3}>Platform</Text>
+        <TouchableOpacity style={{display: 'flex', width: '100%', justifyContent: 'flex-end', alignItems: 'flex-end', marginTop: 50, padding: 20}} onPress={() => navigation.navigate(ROUTES.LOGIN)}>
+          <Text style={styles.skipText}>SKIP</Text>
+        </TouchableOpacity>
+      <View style={{flex: 3}}>
+        <FlatList data={slide} 
+        renderItem={({item}) => <OnboardingItem item={item}/>}
+        horizontal
+        pagingEnabled
+        bounces = {false}
+        keyExtractor={(item) => item.id}
+        onScroll={Animated.event([{nativeEvent: {contentOffset: {x : scrollX}}}], {useNativeDriver: false})}
+        scrollEventThrottle={32}
+        showsHorizontalScrollIndicator={false}
+        onViewableItemsChanged={viewableItemsChanged}
+        viewabilityConfig={viewConfig}
+        ref={slidesRef}
+        />
       </View>
 
-      <View style={styles.textWrapper}>
-      </View>
-      
-      <TouchableOpacity style={styles.getStartedBtn} onPress={() => navigation.navigate(ROUTES.LOGIN)}>
-        <Text style={styles.getStartedTxt}>GET STARTED</Text>
-      </TouchableOpacity>
-
-      </ImageBackground>
+      <Paginator data={slide} scrollX={scrollX}/>
+      <NextButton scrollTo={scrollTo} percentage={(currentIndex + 1) * (100 / slide.length)}/>
     </View>
     )
 }
@@ -52,70 +75,16 @@ const Getstarted = (props) =>  {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.primary,
-    opacity: 20
-  },
-  bgimage: {
-    flex: 1,
     justifyContent: 'center',
     alignItems: 'center'
   },
-  box: {
-    width: 330,
-    height: 200,
-    borderRadius: 20,
-    display: 'flex',
-  },
-  foodpng: {
-    position: 'absolute',
-    width: 500,
-    height: 260,
-    top: 60
-  },
-  personpng: {
-    width: 75,
-    height: 75,
-  },
-  wavepng: {
-    position: 'absolute',
-  },
-  text1: {
-    fontFamily: 'Momcake-Bold',
-    fontSize: 22,
-    color: COLORS.white
-  },
-  textWrapper: {
-    paddingTop: 25,
-    paddingLeft: 30,
-    alignSelf: 'flex-start'
-  },
-  text2: {
-    fontFamily: 'Momcake-Bold',
-    color: COLORS.white,
-    fontSize: 45
-  },
-  text3: {
-    fontFamily: 'Momcake-Bold',
-    color: COLORS.white,
-    fontSize: 65
-  },
-  textWrapper2: {
-    display: 'flex',
-    width: 350,
-    marginBottom: 100
-  },
-  getStartedBtn: {
-    marginTop: 100,
-    padding: 18,
-    paddingHorizontal: 120,
-    borderRadius: 30,
-    borderColor: COLORS.white,
-    borderWidth: 2
-  },
-  getStartedTxt: {
-    color: COLORS.white,
-    fontFamily: 'CL-Bold'
+  skipText:{
+    fontFamily: 'CL-Bold',
+    fontSize: 20,
+    color: COLORS.primary,
+    fontWeight: '800'
   }
+
 
 });
 

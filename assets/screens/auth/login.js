@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity, ToastAndroid, TextInput, KeyboardAvoidingView, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, ToastAndroid, ActivityIndicator, TextInput, KeyboardAvoidingView, ScrollView } from 'react-native';
 import React, {useState} from 'react';
 import { ROUTES } from '../../constants/routes';
 import {useFonts} from 'expo-font';
@@ -12,7 +12,7 @@ const Login = (props) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
-
+    const [isLoading, setIsLoading] = useState(false);
     const togglePasswordVisibility = () => {
       setShowPassword((prevShowPassword) => !prevShowPassword);
     };
@@ -50,6 +50,7 @@ const Login = (props) => {
             setEmail('');
             setPassword('');
             AsyncStorage.setItem('user_id', JSON.stringify(response.data.user.id));
+            setIsLoading(false);
             return navigation.navigate(ROUTES.HOME_NAVIGATOR);
     
           } else {
@@ -57,6 +58,7 @@ const Login = (props) => {
           }
 
         } catch (error) {
+          setIsLoading(false);
           if (error.response) {
 
             console.log('Login Failed', error.response.data.message);
@@ -134,8 +136,13 @@ const Login = (props) => {
       
 
     </View>
+
     <TouchableOpacity style={styles.getStartedBtn} onPress={handleLogin}>
+    {isLoading ? (
+      <ActivityIndicator size="small" color={COLORS.white} />
+    ) : (
       <Text style={styles.getStartedTxtLogin}>LOGIN</Text>
+      )}
     </TouchableOpacity>
 
     <View style={styles.bottomTextCont}>
