@@ -6,10 +6,12 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import axios from 'axios';
 import { baseUrl } from '../constants/url';
+import Echo from 'laravel-echo';
+import Pusher from 'pusher-js';
 const HistoryBox = ({data, navigation}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [initialRegion, setInitialRegion] = useState(null);
-
+  const [status, setStatus] = useState();
   useEffect(() => {
     const getLocation = async () => {
   
@@ -22,6 +24,7 @@ const HistoryBox = ({data, navigation}) => {
     };
   
     getLocation(); 
+    getStatus();
   }, []);
 
   const patchCancelled = async (id) => {
@@ -34,6 +37,27 @@ const HistoryBox = ({data, navigation}) => {
       throw error;
     }
   };
+
+  const getStatus = () => {
+
+
+    // Pusher.logToConsole = true;
+    const echo = new Echo({
+        broadcaster: 'pusher',
+        key: 'c1e225993702dfc860e2',
+        cluster: 'ap1',
+        encrypted: true,
+    });
+
+    // Use echo.connector.options.auth.headers["X-Socket-ID"] instead of echo.connector.socket.on
+    // echo.connector.options.auth.headers["X-Socket-ID"] = echo.socketId();
+
+    echo.channel('notify-channel')
+        .listen('YourEvent', (data) => {
+            console.log('Received event from Laravel Echo:', data[1].data.status);
+        });
+};
+
 
     let [fontsLoaded] = useFonts({
         'Momcake-Bold': require('../fonts/Momcake-Bold.otf'),

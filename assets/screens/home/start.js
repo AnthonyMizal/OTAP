@@ -7,6 +7,8 @@ import Icon2 from 'react-native-vector-icons/MaterialIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { baseUrl } from '../../constants/url';
+
+
 const Start = ({navigation}) => {
   const [emergency, setEmergerncy] = useState("");
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
