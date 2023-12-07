@@ -94,7 +94,7 @@ const Login = (props) => {
             size={25}
             color={COLORS.primary}
             />
-          <TextInput style={styles.inputCon} placeholder='Email'
+          <TextInput style={styles.inputCon} placeholderTextColor={COLORS.gray} placeholder='Email'
           value={email}
           onChangeText={onChangeEmailHandler}
           />
@@ -108,7 +108,7 @@ const Login = (props) => {
             size={25}
             color={COLORS.primary}
             />
-             <TextInput style={styles.inputCon} placeholder='Password'
+             <TextInput style={styles.inputCon} placeholderTextColor={COLORS.gray} placeholder='Password'
               secureTextEntry={!showPassword}
               value={password}
               onChangeText={onChangePasswordHandler}
@@ -141,8 +141,12 @@ const Login = (props) => {
     <View style={styles.bottomTextCont}>
       <Text style={styles.getStartedTxt}>Don't have an account?</Text>
       <TouchableOpacity onPress={() => navigation.navigate(ROUTES.SIGNUP)}>
-      <Text style={styles.registerTxt}>REGISTER</Text>
+      <Text style={styles.registerTxt}>Register</Text>
       </TouchableOpacity>
+    </View>
+
+    <View style={styles.VTextCont}>
+      <Text style={styles.getStartedTxt}>v1.0.0</Text>
     </View>
   
     </KeyboardAvoidingView>
@@ -246,7 +250,6 @@ const styles = StyleSheet.create({
         backgroundColor: COLORS.placeholderBG,
         borderRadius: 15,
         padding: 18,
-
       },
       passinputCont:{
         display: 'flex',
@@ -262,15 +265,19 @@ const styles = StyleSheet.create({
         marginTop: 40
       },
       bottomTextCont: {
+        flexDirection: 'row',
         alignItems: 'center',
-        gap: 18,
+        gap: 3,
         marginTop: 25
+      },
+      VTextCont: {
+        marginTop: 80
       },
       registerTxt: {
         color: COLORS.primary,
-        fontFamily: 'Momcake-Bold',
+        fontFamily: 'CL-Bold',
         fontSize: 20,
-        paddingBottom: 15
+        textDecorationLine: 'underline'
       },
       loginTxt: {
         color: COLORS.primary,

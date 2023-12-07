@@ -66,13 +66,11 @@ export default DropdownComponent;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'white',
-
+    backgroundColor: COLORS.placeholderBG,
+    borderRadius: 15,
   },
   dropdown: {
     width: '100%',
-    borderColor: COLORS.primary,
-    borderWidth: 1,
     borderRadius: 15,
     padding: 15,
   },
@@ -81,7 +79,7 @@ const styles = StyleSheet.create({
   },
   label: {
     position: 'absolute',
-    backgroundColor: 'white',
+    backgroundColor: COLORS.placeholderBG,
     left: 22,
     top: 8,
     zIndex: 999,
@@ -89,11 +87,11 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   placeholderStyle: {
-    fontSize: 16,
+    fontSize: 15,
     color: COLORS.gray
   },
   selectedTextStyle: {
-    fontSize: 16,
+    fontSize: 15,
   },
   iconStyle: {
     width: 20,

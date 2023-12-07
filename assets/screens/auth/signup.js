@@ -98,28 +98,44 @@ const Signup = (props) => {
     <Text style={styles.loginTxt2}>O-TAP is your one tap assisstant for emergency.</Text>
 
     <View style={styles.inputWrapper}>
-      <TextInput style={styles.input} placeholder='Firstname'
+
+      <Text style={styles.inputLabel}>First Name:</Text>
+      <TextInput style={styles.input}
+      placeholderTextColor={COLORS.gray} 
+      placeholder='ex. John'
       value={first_name}
       onChangeText={onChangeFirstnameHandler}
       />
-      <TextInput style={styles.input} placeholder='Lastname'
+
+      <Text style={styles.inputLabel}>Last Name:</Text>
+      <TextInput style={styles.input} placeholderTextColor={COLORS.gray} placeholder='ex. Doe'
       value={last_name}
       onChangeText={onChangeLastnameHandler}
       />
-      <TextInput style={styles.input} placeholder='Contact No.'
+
+      <Text style={styles.inputLabel}>Contact No.:</Text>
+      <TextInput style={styles.input} placeholderTextColor={COLORS.gray} placeholder='ex. 0912345678'
       value={contact_no}
       onChangeText={onChangeContactHandler}
       />
-      <TextInput style={styles.input} placeholder='Age'
+
+      <Text style={styles.inputLabel}>Age:</Text>
+      <TextInput style={styles.input} placeholderTextColor={COLORS.gray} placeholder='ex. 21'
       value={age}
       onChangeText={onChangeAgeHandler}
       />
+
+      <Text style={styles.inputLabel}>Barangay:</Text>
       <DropdownComponent onSelectedValue={onChangeBarangayHandler} />
-      <TextInput style={styles.input} placeholder='Username'
+
+      <Text style={styles.inputLabel}>Email:</Text>
+      <TextInput style={styles.input} placeholderTextColor={COLORS.gray} placeholder='ex. example@gmail.com'
       value={email}
       onChangeText={onChangeUsernameHandler}
       />
-      <TextInput style={styles.input} placeholder='Password'
+
+      <Text style={styles.inputLabel}>Password:</Text>
+      <TextInput style={styles.input} placeholderTextColor={COLORS.gray} placeholder='(must contain 8 characters)'
       secureTextEntry
       value={password}
       onChangeText={onChangePasswordHandler}
@@ -134,7 +150,7 @@ const Signup = (props) => {
     <View style={styles.bottomTextCont}>
       <Text style={styles.getStartedTxt}>Already have an account?</Text>
       <TouchableOpacity onPress={() => navigation.navigate(ROUTES.LOGIN)}>
-      <Text style={styles.registerTxt}>LOGIN</Text>
+      <Text style={styles.registerTxt}>Login</Text>
       </TouchableOpacity>
     </View>
   
@@ -150,6 +166,12 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: COLORS.white,
         alignItems: 'center',
+      },
+      inputLabel: {
+        fontFamily: 'CL-Bold',
+        marginTop: 20,
+        marginBottom: 3,
+        color: COLORS.primary
       },
       box: {
         width: 330,
@@ -228,24 +250,22 @@ const styles = StyleSheet.create({
         backgroundColor: COLORS.placeholderBG,
         borderRadius: 15,
         padding: 18,
-        borderWidth: 1,
-        borderColor: COLORS.primary,
       },
       inputWrapper: {
         width: '80%',
-        gap: 20,
         marginTop: 40
       },
       bottomTextCont: {
+        flexDirection: 'row',
         alignItems: 'center',
-        gap: 18,
-        marginTop: 25
+        gap: 3,
+        marginVertical: 40
       },
       registerTxt: {
+        textDecorationLine: 'underline',
         color: COLORS.primary,
-        fontFamily: 'Momcake-Bold',
+        fontFamily: 'CL-Bold',
         fontSize: 20,
-        paddingBottom: 15
       },
       loginTxt: {
         color: COLORS.primary,
