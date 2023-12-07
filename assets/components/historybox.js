@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View, FlatList, Modal, Pressable, SafeAreaView } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, ToastAndroid, View, FlatList, Modal, Pressable, SafeAreaView } from 'react-native';
 import { COLORS } from '../constants/colors';
 import {useFonts} from 'expo-font';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -34,6 +34,10 @@ const HistoryBox = ({data, navigation}) => {
       throw error;
     }
   };
+
+  const cannotCancel = () => {
+    return ToastAndroid.show('Cannot cancel emergency!', ToastAndroid.SHORT);
+  }
 
     let [fontsLoaded] = useFonts({
         'Momcake-Bold': require('../fonts/Momcake-Bold.otf'),
@@ -147,9 +151,21 @@ const HistoryBox = ({data, navigation}) => {
 
                   <View style={styles.info}>
                   <Text style={styles.btnTxt}>Cancel your request?</Text>
-                  <TouchableOpacity style={styles.getStartedBtn} onPress={() => patchCancelled(data.id)}>
-                    <Text style={styles.getStartedTxtLogin}>ABORT</Text>
-                  </TouchableOpacity>
+                  {data.status !== 'Cancelled' && data.status !== 'Completed' && data.status !== 'Responding'  && data.status !== 'Forwarded' ? (
+                    <TouchableOpacity
+                      style={styles.getStartedBtn}
+                      onPress={() => patchCancelled(data.id)}
+                    >
+                      <Text style={styles.getStartedTxtLogin}>ABORT</Text>
+                    </TouchableOpacity>
+                  ) : (
+                    <TouchableOpacity
+                      style={styles.getStartedBtnOff}
+                      onPress={() => cannotCancel()}
+                    >
+                      <Text style={styles.getStartedTxtLogin}>ABORT</Text>
+                    </TouchableOpacity>
+                  )}
                   </View>
                   
                   </View>
@@ -199,8 +215,23 @@ getStartedBtn: {
   alignItems: 'center',
   elevation: 2
 },
+getStartedBtnOff: {
+  marginTop: 10,
+  backgroundColor: COLORS.gray,
+  padding: 18,
+  paddingHorizontal: 100,
+  borderRadius: 50,
+  width: '100%',
+  alignItems: 'center',
+  elevation: 2
+},
 getStartedTxtLogin: {
   color: '#fff',
+  fontFamily: 'CL-Bold',
+  fontSize: 16
+},
+disabledBtnTxt: {
+  color: COLORS.gray,
   fontFamily: 'CL-Bold',
   fontSize: 16
 },

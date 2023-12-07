@@ -5,6 +5,7 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { baseUrl } from '../../constants/url';
 import { useFocusEffect } from "@react-navigation/native";
+import { COLORS } from '../../constants/colors';
 const YourHistory = () => {
   const [historyData, setHistoryData] = useState([]);
 
@@ -27,6 +28,9 @@ const YourHistory = () => {
       };
     }, [])
   );
+
+
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -34,12 +38,20 @@ const YourHistory = () => {
       </View>
       <View style={styles.boxContainer}>
         
-      <FlatList
-        data={historyData}
-        showsVerticalScrollIndicator={false}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => <HistoryBox data={item} />}
-      />
+      {historyData.length === 0 ? (
+        <View style={styles.nohistoryCont}>
+            <Text style={styles.historytxt}>No history found!</Text>
+        </View>
+         
+        ) : (
+              <FlatList
+            data={historyData}
+            showsVerticalScrollIndicator={false}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({ item }) => <HistoryBox data={item} />}
+          />
+        )}
+      
           
       </View>
     </View>
@@ -62,6 +74,28 @@ const styles = StyleSheet.create({
     marginTop: 30,
     alignItems: 'flex-start',
 
+  },
+  historytxt: {
+    fontStyle: 'italic',
+    color: COLORS.gray
+  },
+  nohistoryCont: {
+    padding: 20,
+    minWidth: '90%',
+    borderRadius: 10,
+    backgroundColor: COLORS.white,
+    display: 'flex',
+    flexDirection: 'row',
+    gap: 6,
+    marginBottom: 10,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 10,
+      height: 5,
+    },
+    shadowOpacity: 1.25,
+    shadowRadius: 50,
+    elevation: 2,
   },
   headinglogo: {
     width: 230,
