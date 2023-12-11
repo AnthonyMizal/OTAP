@@ -42,7 +42,6 @@ const YourHistory = () => {
         <View style={styles.nohistoryCont}>
             <Text style={styles.historytxt}>No history found!</Text>
         </View>
-         
         ) : (
               <FlatList
             data={historyData}
@@ -51,8 +50,6 @@ const YourHistory = () => {
             renderItem={({ item }) => <HistoryBox data={item} />}
           />
         )}
-      
-          
       </View>
     </View>
   );

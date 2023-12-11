@@ -49,15 +49,17 @@ const EditProfile = (props) => {
     const fetchData = async () => {
       try {
         const storedUserId = await AsyncStorage.getItem('user_id');
-        const response = await axios.get(`${baseUrl}user/${storedUserId}`); // Replace with your actual API endpoint
+        const response = await axios.get(`${baseUrl}user/${storedUserId}`); 
+        // console.log(response.data.userDetail);
         if (response.status === 200) {
-          setFirstname(response.data.userDetail[0].first_name);
-          setLastname(response.data.userDetail[0].last_name);
-          setContact(response.data.userDetail[0].contact_no)
-          setAge(response.data.userDetail[0].age);
-          setBarangay(response.data.userDetail[0].barangay);
-          setUsername(response.data.userDetail[0].email);
+          setFirstname(response.data.userDetail.first_name);
+          setLastname(response.data.userDetail.last_name);
+          setContact(response.data.userDetail.contact_no)
+          setAge(response.data.userDetail.age);
+          setBarangay(response.data.userDetail.barangay);
+          setUsername(response.data.userDetail.email);
         }
+        
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -75,28 +77,27 @@ const EditProfile = (props) => {
 
     //Edit Account
     const onSubmitFormHandler = async (event) => {
-      setIsLoading(true);
       try {
-        const response = await axios.patch(`${baseUrl}edituser/${id}`, {
+        const storedUserId = await AsyncStorage.getItem('user_id');
+        const response = await axios.patch(`${baseUrl}userEdit/${storedUserId}`, {
           first_name,
           last_name,
           age,
           contact_no,
-          barangay,
           email,
           password
         });
   
-        if (response.status === 201) {
+        if (response.status === 200) {
 
           setIsLoading(false);
-          ToastAndroid.show('Succesfully Created an Account!', ToastAndroid.SHORT);
-          return navigation.navigate(ROUTES.LOGIN);
+          ToastAndroid.show('Succesfully Updated Account!', ToastAndroid.SHORT);
         } else {
           throw new Error("An error has occurred");
         }
       } catch (error) {
         alert(error);
+        console.log(error);
         setIsLoading(false);
       }
     };
@@ -129,27 +130,38 @@ const EditProfile = (props) => {
     <Text style={styles.loginTxt}>Edit Your Profile!</Text>
 
     <View style={styles.inputWrapper}>
+
+      <Text style={styles.inputLabel}>First Name:</Text>
       <TextInput style={styles.input} placeholder='Firstname'
       value={first_name}
       onChangeText={onChangeFirstnameHandler}
       />
+
+      <Text style={styles.inputLabel}>Last Name:</Text>
       <TextInput style={styles.input} placeholder='Lastname'
       value={last_name}
       onChangeText={onChangeLastnameHandler}
       />
+
+      <Text style={styles.inputLabel}>Contact No.:</Text>
       <TextInput style={styles.input} placeholder='Contact No.'
       value={contact_no}
       onChangeText={onChangeContactHandler}
       />
+
+      <Text style={styles.inputLabel}>Age:</Text>
       <TextInput style={styles.input} placeholder='Age'
-      value={age}
+      value={age.toString()}
       onChangeText={onChangeAgeHandler}
       />
-      <DropdownComponent onSelectedValue={onChangeBarangayHandler} />
-      <TextInput style={styles.input} placeholder='Username'
+
+      <Text style={styles.inputLabel}>Email:</Text>
+      <TextInput style={styles.input} placeholder='Email'
       value={email}
       onChangeText={onChangeUsernameHandler}
       />
+
+      <Text style={styles.inputLabel}>Password:</Text>
       <TextInput style={styles.input} placeholder='Password'
       secureTextEntry
       value={password}
@@ -188,6 +200,12 @@ const styles = StyleSheet.create({
       width: 230,
       height: 42,
       borderWidth: 2,
+    },
+    inputLabel: {
+      fontFamily: 'CL-Bold',
+      marginTop: 20,
+      marginBottom: 3,
+      color: COLORS.primary
     },
     box: {
       width: 330,
@@ -267,12 +285,11 @@ const styles = StyleSheet.create({
       backgroundColor: COLORS.placeholderBG,
       borderRadius: 15,
       padding: 18,
-      borderWidth: 1,
-      borderColor: COLORS.primary,
+
     },
     inputWrapper: {
       width: '80%',
-      gap: 20,
+
       marginTop: 40
     },
     bottomTextCont: {

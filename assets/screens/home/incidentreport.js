@@ -94,7 +94,7 @@ const IncidentReport = (props) => {
     const location = JSON.parse(await AsyncStorage.getItem('location'));
     const user_id = JSON.parse(await AsyncStorage.getItem('user_id'));
     const status = "Pending";
-    console.log(user_id, formattedDate, formattedTime, location.longitude, location.latitude, details, addnotes, status, imageName, image, imageType)
+    
     
     try {
       
@@ -121,9 +121,15 @@ const IncidentReport = (props) => {
         },
       });
       if (response.status === 200) {
-        setIsLoading(false);
+        setDate(new Date());
+        setTime(new Date());
+        setDetails("");
+        setNotes("");
+        setImagePath(null);
+        setImageName(null);
+        setImageType(null);
         ToastAndroid.show('Succesfully Reported an Incident!', ToastAndroid.SHORT);
-        return navigation.navigate(ROUTES.HOME_NAVIGATOR);
+        return navigation.navigate(ROUTES.START);
       } else {
         throw new Error('An error has occurred');
       }

@@ -24,7 +24,7 @@ const Profile = (props) => {
   }
 
 const logout = async () => {
-  AsyncStorage.setItem('user_id', JSON.stringify(""));
+  await AsyncStorage.removeItem('user_id');
   ToastAndroid.show('Logged out!', ToastAndroid.SHORT);
   return navigation.navigate(ROUTES.LOGIN);
 };

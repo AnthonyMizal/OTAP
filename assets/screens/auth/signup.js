@@ -1,12 +1,13 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity, ToastAndroid, TextInput, KeyboardAvoidingView, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ToastAndroid, Modal, TextInput, KeyboardAvoidingView, ScrollView } from 'react-native';
 import React, {useState} from 'react';
 import { ROUTES } from '../../constants/routes';
 import {useFonts} from 'expo-font';
 import {COLORS} from '../../constants/colors';
 import DropdownComponent from '../../components/dropdownbarangay';
 import axios from 'axios';
+import CheckBox from 'expo-checkbox';
 import { baseUrl } from '../../constants/url';
-
+import Icon from 'react-native-vector-icons/Ionicons';
 const Signup = (props) => {
     const {navigation} = props;
     const [first_name, setFirstname] = useState("");
@@ -16,8 +17,20 @@ const Signup = (props) => {
     const [barangay, setBarangay] = useState("");
     const [email, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [privacyPolicyChecked, setPrivacyPolicyChecked] = useState(false);
+    const [termsOfUseChecked, setTermsOfUseChecked] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-
+    const [privacyModalVisible, setPrivacyModalVisible] = useState(false);
+    const [termsModalVisible, setTermsModalVisible] = useState(false);
+  
+    const togglePrivacyModal = () => {
+      setPrivacyModalVisible(!privacyModalVisible);
+    };
+  
+    const toggleTermsModal = () => {
+      setTermsModalVisible(!termsModalVisible);
+    };
+  
     const onChangeFirstnameHandler = (first_name) => {
       setFirstname(first_name);
     };
@@ -41,7 +54,22 @@ const Signup = (props) => {
       setPassword(password);
     };
 
+    const onPrivacyPolicyToggle = () => {
+      setPrivacyPolicyChecked(!privacyPolicyChecked);
+    };
+  
+    const onTermsOfUseToggle = () => {
+      setTermsOfUseChecked(!termsOfUseChecked);
+    };
+
     const onSubmitFormHandler = async (event) => {
+      if (!privacyPolicyChecked || !termsOfUseChecked) {
+        ToastAndroid.show(
+          'Please agree to the Privacy Policy and Terms of Use',
+          ToastAndroid.SHORT
+        );
+        return;
+      }
   
       setIsLoading(true);
   
@@ -141,6 +169,111 @@ const Signup = (props) => {
       onChangeText={onChangePasswordHandler}
       />
    
+   <View style={styles.checkboxContainer}>
+            <CheckBox
+              value={privacyPolicyChecked}
+              onValueChange={onPrivacyPolicyToggle}
+            />
+            <TouchableOpacity>
+            <Text style={styles.checkboxLabel} onPress={togglePrivacyModal}>
+              I agree to the Privacy Policy
+            </Text>
+            </TouchableOpacity>
+          </View>
+
+      
+          <Modal visible={privacyModalVisible} animationType="slide" transparent={true}>
+            <View style={styles.modalContainer}>
+              <View style={styles.modalHeader}>
+                <TouchableOpacity onPress={togglePrivacyModal}>
+                <Icon
+                name= 'close-outline'
+                size={35}
+                color={COLORS.black}
+                />
+                </TouchableOpacity>
+              </View>
+              <ScrollView style={styles.modalBody} contentContainerStyle={styles.scrollViewContainer}>
+                <Text style={styles.modalTextTitle}>Privacy Policy</Text>
+                <Text style={styles.modalTextDate}>Last Updated: December 1, 2023</Text>
+                <Text style={styles.modalTextDetails}>One-Tap Assistance Platform (O-TAP) is an innovative approach designed to improve emergency response and safety within a barangay’s community of Olongapo City.
+                  The Privacy Policy of O-TAP is commited to safeguarding the privacy of our users and ensure the security of their personal information. This Privacy Policy describes how O-TAP process personal information that we collect, use, and protect the data you provide when using the platform.</Text>
+                <View style={styles.modalTextContentCont}>
+
+                  <Text style={styles.modalTextContent}>1. Information We Collect:
+                  O-TAP collects essential personal information, including names, contact details, and location data, which is required during the registration process for efficient emergency responses.</Text>
+                  <Text style={styles.modalTextContent}>2. How We Use Your Information:
+                  The collected information is utilized for emergency response purposes, ensuring a prompt and effective aid delivery. </Text>
+                  <Text style={styles.modalTextContent}>3. Data Security:
+                  We employ industry-standard security measures to protect your personal information from unauthorized access, disclosure, alteration, and destruction. Access to user data is restricted to authorized personnel only.</Text>
+                  <Text style={styles.modalTextContent}>4. Information Sharing:
+                  User information is not exchanged, sold, or rented to outside parties by O-TAP. We might exchange information with the emergency response agencies to guarantee precise and prompt help.</Text>
+                  <Text style={styles.modalTextContent}>5. Updates to Privacy Policy:
+                  O-TAP has the right to make necessary updates to this privacy policy. Any updates will be communicated to users, and their continued use of our services indicates their agreement to the amended terms.</Text>
+                  <Text style={styles.modalTextContent}>6. User Control and Access:
+                  Users have the right to access, and modify their personal information stored by O-TAP. </Text>
+                  <Text style={styles.modalTextContent}>7. Consent:
+                  By using O-TAP, users consent to the terms outlined in this Privacy Policy. If you disagree with any aspect, please refrain from using the platform.</Text>
+
+                </View>
+              </ScrollView>
+            </View>
+          </Modal>
+
+
+          <View style={styles.checkboxContainer}>
+            <CheckBox
+              value={termsOfUseChecked}
+              onValueChange={onTermsOfUseToggle}
+            />
+             <TouchableOpacity onPress={toggleTermsModal}>
+            <Text style={styles.checkboxLabel}>
+              I agree to the Terms of Use
+            </Text>
+            </TouchableOpacity>
+          </View>
+
+          <Modal visible={termsModalVisible} animationType="slide" transparent={true}>
+            <View style={styles.modalContainer}>
+              <View style={styles.modalHeader}>
+                  <TouchableOpacity onPress={toggleTermsModal}>
+                  <Icon
+                  name= 'close-outline'
+                  size={35}
+                  color={COLORS.black}
+                  />
+                  </TouchableOpacity>
+                </View>
+                <ScrollView style={styles.modalBody} contentContainerStyle={styles.scrollViewContainer}>
+                <Text style={styles.modalTextTitle}>Terms of Use</Text>
+                <Text style={styles.modalTextDate}>Last Updated: December 1, 2023</Text>
+                <Text style={styles.modalTextDetails}>By using O-TAP, you acknowledge and agree to these Terms of Use:</Text>
+                <View style={styles.modalTextContentCont}>
+
+                  <Text style={styles.modalTextContent}>1. Button Activation Wait Time:
+                  For enhanced efficiency and to reduce redundancy, users are required to wait for 1 minute after clicking a button before activating it again.</Text>
+                  <Text style={styles.modalTextContent}>2. User Conduct:
+                  Users are expected to use O-TAP responsibly and must refrain from engaging in abusive or inappropriate behavior on the platform. Please utilize this app wisely and only in situations requiring immediate assistance. If a user is found to be engaging in inappropriate behavior on the platform, the barangay will take appropriate measures to address and rectify the situation.
+                  </Text>
+                  <Text style={styles.modalTextContent}>3. Data Privacy:
+                  O-TAP is committed to safeguarding user privacy, handling all user data in accordance with our Privacy Policy.</Text>
+                  <Text style={styles.modalTextContent}>4. Accuracy of Information:
+                  Users must provide accurate details during registration and any subsequent edits. This precise information is crucial for ensuring an effective and timely response from emergency services.
+                  </Text>
+                  <Text style={styles.modalTextContent}>5. Intellectual Property:
+                  The developers own exclusive ownership of all trademarks, logos, and content related to O-TAP.</Text>
+                  <Text style={styles.modalTextContent}>6. Limitation of Liability:
+                  The developers of O-TAP hold no liability for any damages resulting from the use or inability to use the platform.</Text>
+                  <Text style={styles.modalTextContent}>7. Modifications:
+                  O-TAP reserves the right to modify these Terms of Use at any time, and users are encouraged to periodically review them.</Text>
+                  <Text style={styles.modalTextContent}>8. Termination:
+                  O-TAP retains the authority to terminate user access for any reason without prior notice.</Text>
+                  <Text style={styles.modalTextContent}>9. Cancellation Policy: Users cannot cancel their emergency assistance request if the barangay is not responding or has forwarded the request to the appropriate emergency response team.</Text>
+
+                </View>
+              </ScrollView>
+            </View>
+        </Modal>
 
     </View>
     <TouchableOpacity style={styles.getStartedBtn} onPress={onSubmitFormHandler}>
@@ -167,6 +300,70 @@ const styles = StyleSheet.create({
         backgroundColor: COLORS.white,
         alignItems: 'center',
       },
+      checkboxContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginTop: 10,
+        textDecorationLine: 'underline',
+      },
+      checkboxLabel: {
+        fontFamily: 'CL-Bold',
+        color: COLORS.primary,
+        marginLeft: 10,
+        textDecorationLine: 'underline',
+      },
+
+      modalContainer: {
+        flex: 1,
+        alignItems: 'center',
+        backgroundColor: COLORS.background,
+        margin: 20,
+        borderRadius: 40
+      },
+
+      modalHeader:{
+      paddingTop: 20,
+       width: '100%',
+       paddingRight: 20,
+       display: 'flex',
+       alignItems: 'flex-end'
+      },
+
+      scrollViewContainer: {
+        flexGrow: 1,
+      },
+
+      modalBody: {
+        flex: 1,
+        paddingTop: 0,
+        padding: 20,
+      },
+
+      modalTextTitle:{
+        color: COLORS.primary,
+        fontFamily: 'CL-Bold',
+        fontSize: 20
+      },
+
+      modalTextDate:{
+        color: COLORS.gray,
+        fontFamily: 'CL-Bold',
+      },
+
+      modalTextDetails:{
+        fontFamily: 'CL-Bold',
+        fontSize: 15,
+        margin: 15,
+        textAlign: 'justify'
+      },
+
+      modalTextContent:{
+        color: COLORS.gray,
+        fontFamily: 'CL-Bold',
+        margin: 15,
+        textAlign: 'justify'
+      },
+
       inputLabel: {
         fontFamily: 'CL-Bold',
         marginTop: 20,
