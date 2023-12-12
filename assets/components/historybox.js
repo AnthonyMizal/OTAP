@@ -6,7 +6,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import axios from 'axios';
 import { baseUrl } from '../constants/url';
-const HistoryBox = ({data, navigation}) => {
+const HistoryBox = ({data, navigation, fetchHistory}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [initialRegion, setInitialRegion] = useState(null);
 
@@ -28,6 +28,8 @@ const HistoryBox = ({data, navigation}) => {
   
     try {
       const response = await axios.patch(`${baseUrl}cancelled/${id}`);
+      ToastAndroid.show('Succesfully canceled an emergency!', ToastAndroid.SHORT);
+      fetchHistory();
       return response.data; 
     } catch (error) {
       console.error('Error making PATCH request:', error);

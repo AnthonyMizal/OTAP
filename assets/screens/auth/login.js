@@ -60,14 +60,11 @@ const Login = (props) => {
         } catch (error) {
           setIsLoading(false);
           if (error.response) {
-
-            console.log('Login Failed', error.response.data.message);
+            ToastAndroid.show('Incorrect email or password!', ToastAndroid.SHORT);
           } else if (error.request) {
-  
-            console.log('Network Error', 'Please check your internet connection.');
+            ToastAndroid.show('Check your internet Connection!', ToastAndroid.SHORT);
           } else {
-
-            console.log('Error', 'An unexpected error occurred.');
+            ToastAndroid.show('An unexpected error occurred!', ToastAndroid.SHORT);
           }
         }
       };

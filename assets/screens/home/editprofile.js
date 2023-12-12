@@ -8,7 +8,7 @@ import { baseUrl } from '../../constants/url';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DropdownComponent from '../../components/dropdownbarangay';
 import { useFocusEffect } from "@react-navigation/native";
-
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const EditProfile = (props) => {
   const {navigation} = props;
@@ -19,8 +19,16 @@ const EditProfile = (props) => {
     const [barangay, setBarangay] = useState("");
     const [email, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [newPassword, setNewPassword] = useState("");
     const [isLoading, setIsLoading] = useState(false);
-
+    const [showPassword, setShowPassword] = useState(false);
+    const [shownewPassword, setnewShowPassword] = useState(false);
+    const togglePasswordVisibility = () => {
+      setShowPassword((prevShowPassword) => !prevShowPassword);
+    };
+    const togglenewPasswordVisibility = () => {
+      setnewShowPassword((prevshownewPassword) => !prevshownewPassword);
+    };
     const onChangeFirstnameHandler = (first_name) => {
       setFirstname(first_name);
     };
@@ -50,7 +58,6 @@ const EditProfile = (props) => {
       try {
         const storedUserId = await AsyncStorage.getItem('user_id');
         const response = await axios.get(`${baseUrl}user/${storedUserId}`); 
-        // console.log(response.data.userDetail);
         if (response.status === 200) {
           setFirstname(response.data.userDetail.first_name);
           setLastname(response.data.userDetail.last_name);
@@ -78,6 +85,15 @@ const EditProfile = (props) => {
     //Edit Account
     const onSubmitFormHandler = async (event) => {
       try {
+        if (!/^\d+$/.test(age)) {
+          ToastAndroid.show('Age must be numeric!', ToastAndroid.SHORT);
+          return;
+        }
+    
+        if (!/^\d{11}$/.test(contact_no)) {
+          ToastAndroid.show('Contact number must be numeric and 11 characters long!', ToastAndroid.SHORT);
+          return;
+        }
         const storedUserId = await AsyncStorage.getItem('user_id');
         const response = await axios.patch(`${baseUrl}userEdit/${storedUserId}`, {
           first_name,
@@ -85,19 +101,20 @@ const EditProfile = (props) => {
           age,
           contact_no,
           email,
-          password
+          current_password: password,
+          password: newPassword,
         });
   
         if (response.status === 200) {
-
           setIsLoading(false);
           ToastAndroid.show('Succesfully Updated Account!', ToastAndroid.SHORT);
         } else {
           throw new Error("An error has occurred");
         }
       } catch (error) {
-        alert(error);
-        console.log(error);
+        if (error.response && error.response.status === 422 && error.response.data.message === 'Current password is incorrect.') {
+          ToastAndroid.show('Incorrect Password!', ToastAndroid.SHORT);
+          };
         setIsLoading(false);
       }
     };
@@ -161,12 +178,69 @@ const EditProfile = (props) => {
       onChangeText={onChangeUsernameHandler}
       />
 
-      <Text style={styles.inputLabel}>Password:</Text>
-      <TextInput style={styles.input} placeholder='Password'
-      secureTextEntry
-      value={password}
-      onChangeText={onChangePasswordHandler}
+    <Text style={styles.inputLabel}>Current Password:</Text>
+    <View style={styles.passinput}>
+        <View style={styles.passinputCont}>
+        <TextInput
+          style={styles.passContinput}
+          placeholder="Current Password"
+          secureTextEntry={!showPassword}
+          value={password}
+          onChangeText={(text) => setPassword(text)}
+        />
+        </View>
+         
+          <TouchableOpacity style={styles.passtoggle} onPress={togglePasswordVisibility}>
+                {showPassword === true ? (
+                  <Icon
+                  name= 'eye-off'
+                  size={25}
+                  color={COLORS.gray}
+                  />
+                  ) : (
+                    <Icon
+                  name= 'eye'
+                  size={25}
+                  color={COLORS.gray}
+                  />
+                  )}
+          </TouchableOpacity>
+      </View>
+
+
+
+
+
+      <Text style={styles.inputLabel}>New Password:</Text>
+      <View style={styles.passinput}>
+        <View style={styles.passinputCont}>
+        <TextInput
+        style={styles.passinputCont}
+        placeholder="New Password"
+        secureTextEntry={!shownewPassword}
+        value={newPassword}
+        onChangeText={(text) => setNewPassword(text)}
       />
+        </View>
+         
+          <TouchableOpacity style={styles.passtoggle} onPress={togglenewPasswordVisibility}>
+                {shownewPassword === true ? (
+                  <Icon
+                  name= 'eye-off'
+                  size={25}
+                  color={COLORS.gray}
+                  />
+                  ) : (
+                    <Icon
+                  name= 'eye'
+                  size={25}
+                  color={COLORS.gray}
+                  />
+                  )}
+          </TouchableOpacity>
+      </View>
+
+
    
 
     </View>
@@ -218,6 +292,17 @@ const styles = StyleSheet.create({
     scrollView: {
       width: '100%',
       height: 0
+    },
+    passinput: {
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      backgroundColor: COLORS.placeholderBG,
+      borderRadius: 15,
+      padding: 18,
+    },
+    passinputCont:{
+      width: '90%',
     },
     picContainer: {
       width: '90%',
@@ -281,11 +366,14 @@ const styles = StyleSheet.create({
       fontFamily: 'CL-Bold',
       fontSize: 16
     },
+    passContinput: {
+      backgroundColor: COLORS.placeholderBG,
+      borderRadius: 15,
+    },
     input: {
       backgroundColor: COLORS.placeholderBG,
       borderRadius: 15,
       padding: 18,
-
     },
     inputWrapper: {
       width: '80%',
