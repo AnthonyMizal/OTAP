@@ -7,9 +7,16 @@ import Icon2 from 'react-native-vector-icons/MaterialIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { baseUrl } from '../../constants/url';
+import { showMessage, hideMessage } from "react-native-flash-message";
+import FlashMessage from "react-native-flash-message";
+import * as geolib from "geolib";
+import customBounds from '../../components/staritabounds'
 const Start = ({navigation}) => {
   const [emergency, setEmergerncy] = useState("");
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+
+  
+
   useEffect(() => {
 
     if (emergency !== "") {
@@ -44,6 +51,14 @@ const Start = ({navigation}) => {
     const status = "Pending";
 
     try {
+      const isInsideBounds = geolib.isPointInPolygon(
+        { latitude: location.latitude, longitude: location.longitude },
+        customBounds.map(point => ({ latitude: point.latitude, longitude: point.longitude }))
+       
+      );
+      if (!isInsideBounds) {
+        return ToastAndroid.show('You are outside the vicinity of Santa rita!', ToastAndroid.SHORT);
+      }
 
       const response = await axios.post(`${baseUrl}sendreport`, {
         residents_id:user_id,
@@ -91,9 +106,11 @@ const Start = ({navigation}) => {
 
     return (
       <View style={styles.container}>
+         <FlashMessage position="top" />
           <View style={styles.header}>
             <Image style={styles.headinglogo} source={require('../../otapimages/header.png')} />
           </View>
+         
           <View style={styles.buttonContainer}>
           <TouchableOpacity style={[styles.box1, isButtonDisabled && styles.disabledButton]} onPress={() => {
             if (!isButtonDisabled) {

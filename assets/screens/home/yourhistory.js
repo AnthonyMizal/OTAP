@@ -148,6 +148,7 @@ const styles = StyleSheet.create({
     fontSize: 15
   },
   notactiveText:{
+    color: COLORS.primary,
     fontFamily: 'CL-Bold',
     fontSize: 15
   },

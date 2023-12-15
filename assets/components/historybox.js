@@ -10,6 +10,12 @@ const HistoryBox = ({data, navigation, fetchHistory}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [initialRegion, setInitialRegion] = useState(null);
 
+  const openModal = () => {
+    setModalVisible(true);
+    fetchHistory();
+  };
+
+
   useEffect(() => {
     const getLocation = async () => {
   
@@ -60,7 +66,7 @@ const HistoryBox = ({data, navigation, fetchHistory}) => {
            return ( 
             <View >
               
-            <TouchableOpacity style={styles.box} key={data.id} onPress={() => setModalVisible(true)}>
+            <TouchableOpacity style={styles.box} key={data.id} onPress={openModal}>
                 <View style={styles.rightCont}>
                 {data.type === 'Requesting for a Fire Truck' ? (
                   <View style={styles.lineCondition1}></View>
