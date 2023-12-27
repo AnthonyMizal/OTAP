@@ -8,6 +8,8 @@ import axios from 'axios';
 import CheckBox from 'expo-checkbox';
 import { baseUrl } from '../../constants/url';
 import Icon from 'react-native-vector-icons/Ionicons';
+import * as ImagePicker from 'expo-image-picker';
+import { AntDesign } from '@expo/vector-icons';
 const Signup = (props) => {
     const {navigation} = props;
     const [first_name, setFirstname] = useState("");
@@ -22,7 +24,14 @@ const Signup = (props) => {
     const [isLoading, setIsLoading] = useState(false);
     const [privacyModalVisible, setPrivacyModalVisible] = useState(false);
     const [termsModalVisible, setTermsModalVisible] = useState(false);
-  
+    const [idimage, setIdImagePath] = useState(null);
+    const [idimageName, setIdImageName] = useState(null);
+    const [idimageType, setIdImageType] = useState(null);
+    const [corimage, setCorImagePath] = useState(null);
+    const [corimageName, setCorImageName] = useState(null);
+    const [corimageType, setCorImageType] = useState(null);
+
+
     const togglePrivacyModal = () => {
       setPrivacyModalVisible(!privacyModalVisible);
     };
@@ -62,6 +71,52 @@ const Signup = (props) => {
       setTermsOfUseChecked(!termsOfUseChecked);
     };
 
+    const addIdImage = async () => {
+      let _image = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.Images,
+          allowsEditing: true,
+          aspect: [4,3],
+          quality: 1,
+      });
+  
+      if (!_image.canceled) {
+    
+        setIdImagePath(_image.assets[0].uri);
+        setIdImageType(_image.assets[0].type);
+        let path = _image.assets[0].uri;
+          if (Platform.OS === "ios") {
+          path = "~" + path.substring(path.indexOf("/Documents"));
+          }
+          if (!_image.assets[0].fileName){
+              new_path = path.split("/").pop();
+          } 
+        setIdImageName(new_path);
+      }
+    }
+
+    const addCorImage = async () => {
+      let _image = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.Images,
+          allowsEditing: true,
+          aspect: [5,6],
+          quality: 1,
+      });
+  
+      if (!_image.canceled) {
+    
+        setCorImagePath(_image.assets[0].uri);
+        setCorImageType(_image.assets[0].type);
+        let path = _image.assets[0].uri;
+          if (Platform.OS === "ios") {
+          path = "~" + path.substring(path.indexOf("/Documents"));
+          }
+          if (!_image.assets[0].fileName){
+              new_path = path.split("/").pop();
+          } 
+        setCorImageName(new_path);
+      }
+    }
+
     const onSubmitFormHandler = async (event) => {
       if (!privacyPolicyChecked || !termsOfUseChecked) {
         ToastAndroid.show(
@@ -72,19 +127,34 @@ const Signup = (props) => {
       }
   
       setIsLoading(true);
-  
       try {
-        const response = await axios.post(`${baseUrl}register`, {
-          first_name,
-          last_name,
-          age,
-          contact_no,
-          barangay,
-          email,
-          password
+
+        const data = new FormData();
+        data.append('first_name', first_name);
+        data.append('last_name', last_name);
+        data.append('age', age);
+        data.append('contact_no', contact_no);
+        data.append('barangay', barangay);
+        data.append('email', email);
+        data.append('password', password);
+        data.append('valid_id', {
+          uri: idimage,
+          name: idimageName,
+          type: `image/${idimageType}`,
+        });
+        data.append('cor', {
+          uri: corimage,
+          name: corimageName,
+          type: `image/${corimageType}`,
+        });
+
+        const response = await axios.post(`${baseUrl}register`, data,{
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
         });
   
-        if (response.status === 201) {
+        if (response.status === 200) {
 
           setIsLoading(false);
           ToastAndroid.show('Succesfully Created an Account!', ToastAndroid.SHORT);
@@ -93,6 +163,7 @@ const Signup = (props) => {
           throw new Error("An error has occurred");
         }
       } catch (error) {
+        console.error('Error during form submission:', error);
         alert(error);
         setIsLoading(false);
       }
@@ -156,6 +227,34 @@ const Signup = (props) => {
       <Text style={styles.inputLabel}>Barangay:</Text>
       <DropdownComponent onSelectedValue={onChangeBarangayHandler} />
 
+      <Text style={styles.inputLabel}>Valid ID:</Text>
+        <View style={imageUploaderStyles.container}>
+                {
+                    idimage  &&  <TextInput style={styles.input} placeholderTextColor={COLORS.gray}
+                    value={idimageName}
+                    />
+                }
+                    <View style={imageUploaderStyles.uploadBtnContainer}>
+                        <TouchableOpacity onPress={addIdImage} style={imageUploaderStyles.uploadBtn} >
+                            <Text>{idimage? 'Edit' : 'Upload'} Valid ID</Text>
+                        </TouchableOpacity>
+                    </View>
+        </View>
+
+        <Text style={styles.inputLabel}>Certificate of Residency:</Text>
+        <View style={imageUploaderStyles.container}>
+                {
+                    corimage  &&  <TextInput style={styles.input} placeholderTextColor={COLORS.gray}
+                    value={corimageName}
+                    />
+                }
+                    <View style={imageUploaderStyles.uploadBtnContainer}>
+                        <TouchableOpacity onPress={addCorImage} style={imageUploaderStyles.uploadBtn} >
+                            <Text>{corimage? 'Edit' : 'Upload'} COR</Text>
+                        </TouchableOpacity>
+                    </View>
+        </View>
+
       <Text style={styles.inputLabel}>Email:</Text>
       <TextInput style={styles.input} placeholderTextColor={COLORS.gray} placeholder='ex. example@gmail.com'
       value={email}
@@ -168,6 +267,8 @@ const Signup = (props) => {
       value={password}
       onChangeText={onChangePasswordHandler}
       />
+
+
    
    <View style={styles.checkboxContainer}>
             <CheckBox
@@ -293,6 +394,40 @@ const Signup = (props) => {
   </View>
      )
 }
+
+const imageUploaderStyles=StyleSheet.create({
+  container:{
+      elevation:2,
+      backgroundColor:COLORS.placeholderBG,
+      position:'relative',
+      overflow:'hidden',
+      alignSelf: 'center',
+      display: 'flex',
+      flexDirection: 'row',
+      borderRadius: 10,
+      height: 65,
+      width: 314
+  },
+  uploadBtnContainer:{
+      opacity:0.7,
+      position:'absolute',
+      right:0,
+      bottom:0,
+      backgroundColor:COLORS.primary,
+      width:'100%',
+      height:'40%',
+ 
+      
+  },
+  uploadBtn:{
+      display:'flex',
+      
+      alignItems:"center",
+      justifyContent:'center'
+  }
+})
+
+
 
 const styles = StyleSheet.create({
     container: {

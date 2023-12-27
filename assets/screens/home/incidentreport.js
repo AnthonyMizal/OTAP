@@ -9,10 +9,9 @@ import * as ImagePicker from 'expo-image-picker';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { AntDesign } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import mime from "mime";
+
 const IncidentReport = (props) => {
   const {navigation} = props;
-  const [file, setFile] = useState([])
   const [date, setDate] = useState(new Date());
   const [time, setTime] = useState(new Date());
   const [details, setDetails] = useState("");
