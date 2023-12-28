@@ -1,3 +1,3 @@
-export const baseUrl = 'http://192.168.18.43:8000/api/';
+export const baseUrl = 'http://192.168.100.170:8000/api/';
 
-export const imgUrl = 'http://192.168.18.43:8000/file/';
+export const imgUrl = 'http://192.168.100.170:8000/file/';
