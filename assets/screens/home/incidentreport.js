@@ -9,6 +9,8 @@ import * as ImagePicker from 'expo-image-picker';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { AntDesign } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import DropdownComponentIncident from '../../components/dropdownincident';
+import CheckBox from 'expo-checkbox';
 
 const IncidentReport = (props) => {
   const {navigation} = props;
@@ -22,7 +24,25 @@ const IncidentReport = (props) => {
   const [image, setImagePath] = useState(null);
   const [imageName, setImageName] = useState(null);
   const [imageType, setImageType] = useState(null);
+  const [ambulanceChecked, setAmbulanceChecked] = useState(0);
+  const [fireChecked, setFireChecked] = useState(0);
+  const [bpsoChecked, setBpsoChecked] = useState(0);
+  const [type_of_incidents, setTypeIncident] = useState("");
 
+  const ambulanceToggle = () => {
+    setAmbulanceChecked((prevValue) => (prevValue === 0 ? 1 : 0));
+    console.log(ambulanceChecked);
+  };
+
+  const fireToggle = () => {
+    setFireChecked((prevValue) => (prevValue === 0 ? 1 : 0));
+    console.log(fireChecked);
+  };
+
+  const bpsoToggle = () => {
+    setBpsoChecked((prevValue) => (prevValue === 0 ? 1 : 0));
+    console.log(bpsoChecked);
+  };
 
   const addImage = async () => {
     let _image = await ImagePicker.launchImageLibraryAsync({
@@ -81,7 +101,10 @@ const IncidentReport = (props) => {
     setNotes(addnotes);
   };
 
-
+  const onChangeIncidentHandler = (selectedIncident) => {
+        setTypeIncident("");
+        setTypeIncident(selectedIncident);
+      };
 
 
   const onSubmitFormHandler = async (event) => {
@@ -108,6 +131,10 @@ const IncidentReport = (props) => {
       data.append('timehappened', formattedTime);
       data.append('longitude', location.longitude);
       data.append('latitude', location.latitude);
+      data.append('type_of_incidents', type_of_incidents);
+      data.append('BPSO', bpsoChecked);
+      data.append('Ambulance', ambulanceChecked);
+      data.append('Firetruck', fireChecked);
       data.append('details', details);
       data.append('addnotes', addnotes);
       data.append('status', status);
@@ -127,6 +154,9 @@ const IncidentReport = (props) => {
         setImagePath(null);
         setImageName(null);
         setImageType(null);
+        setAmbulanceChecked(0);
+        setFireChecked(0);
+        setBpsoChecked(0);
         ToastAndroid.show('Succesfully Reported an Incident!', ToastAndroid.SHORT);
         return navigation.navigate(ROUTES.START);
       } else {
@@ -170,7 +200,7 @@ const IncidentReport = (props) => {
 
     <View style={imageUploaderStyles.container}>
                 {
-                    image  && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />
+                    image  && <Image source={{ uri: image }} style={{ width: 350, height: 200 }} />
                 }
                     <View style={imageUploaderStyles.uploadBtnContainer}>
                         <TouchableOpacity onPress={addImage} style={imageUploaderStyles.uploadBtn} >
@@ -179,7 +209,7 @@ const IncidentReport = (props) => {
                         </TouchableOpacity>
                         
                     </View>
-            </View>
+    </View>
    
     <View style={styles.inputWrapper}>
     <Text style={styles.loginTxt3}>When Did the Incident/Emergency Happened?</Text>
@@ -205,6 +235,47 @@ const IncidentReport = (props) => {
         />
       </View>
         
+      <Text style={styles.loginTxt2}>Choose the needed responders:</Text>
+
+      <View style={styles.checkboxMainContainer}>
+        <View style={styles.checkboxContainer}>
+              <CheckBox
+                value={ambulanceChecked === 1}
+                onValueChange={ambulanceToggle}
+              />
+              <Text style={styles.checkboxLabelA}>
+                Ambulance
+              </Text>
+        </View>
+
+        <View style={styles.checkboxContainer}>
+              <CheckBox
+                value={fireChecked === 1}
+                onValueChange={fireToggle}
+              />
+              <Text style={styles.checkboxLabelF}>
+                Fire Truck
+              </Text>
+        </View>
+
+        
+        <View style={styles.checkboxContainer}>
+              <CheckBox
+                value={bpsoChecked === 1}
+                onValueChange={bpsoToggle}
+              />
+              <Text style={styles.checkboxLabelB}>
+                BPSO
+              </Text>
+        </View>
+      </View>
+
+      
+
+
+      <Text style={styles.loginTxt2}>Choose a type of incident:</Text>
+      <DropdownComponentIncident onSelectedValue={onChangeIncidentHandler}/>
+
       <Text style={styles.loginTxt2}>What Happened?</Text>
         <TextInput
           style={styles.input}
@@ -241,11 +312,13 @@ const IncidentReport = (props) => {
     container:{
         elevation:2,
         height:200,
-        width:200,
+        width:350,
         backgroundColor:'#efefef',
         position:'relative',
         overflow:'hidden',
-        alignSelf: 'center'
+        alignSelf: 'center',
+        borderRadius: 20,
+        marginTop: 10
     },
     uploadBtnContainer:{
         opacity:0.7,
@@ -267,6 +340,31 @@ const IncidentReport = (props) => {
     container: {
       flex: 1,
       backgroundColor: COLORS.white,
+    },
+    checkboxMainContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between'
+    },
+    checkboxContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginTop: 10,
+    },
+    checkboxLabelA: {
+      fontFamily: 'CL-Bold',
+      color: '#f77777',
+      marginLeft: 10,
+    },
+    checkboxLabelF: {
+      fontFamily: 'CL-Bold',
+      color: '#f7ae77',
+      marginLeft: 10,
+    },
+    checkboxLabelB: {
+      fontFamily: 'CL-Bold',
+      color: '#77c0f7',
+      marginLeft: 10,
     },
     header: {
       padding: 14,
@@ -349,14 +447,15 @@ const IncidentReport = (props) => {
     getStartedTxtLogin: {
       color: COLORS.white,
       fontFamily: 'CL-Bold',
-      fontSize: 16
+      fontSize: 16,
+      width: '100%'
     },
     input: {
       backgroundColor: COLORS.placeholderBG,
       borderRadius: 15,
       padding: 18,
-      borderWidth: 1,
-      borderColor: COLORS.primary,
+
+
     },
 
     dateTimeCont: {
@@ -368,8 +467,7 @@ const IncidentReport = (props) => {
       backgroundColor: COLORS.placeholderBG,
       borderRadius: 15,
       padding: 18,
-      borderWidth: 1,
-      borderColor: COLORS.primary,
+
       width: 150
     },
 

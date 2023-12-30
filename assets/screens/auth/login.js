@@ -59,9 +59,13 @@ const Login = (props) => {
 
         } catch (error) {
           setIsLoading(false);
-          if (error.response) {
+          if (error.response.status == 400) {
+            ToastAndroid.show('Wait for the approval of your account!', ToastAndroid.SHORT);
+          }
+          else if (error.response) {
             ToastAndroid.show('Incorrect email or password!', ToastAndroid.SHORT);
-          } else if (error.request) {
+          } 
+          else if (error.request) {
             ToastAndroid.show('Check your internet Connection!', ToastAndroid.SHORT);
           } else {
             ToastAndroid.show('An unexpected error occurred!', ToastAndroid.SHORT);

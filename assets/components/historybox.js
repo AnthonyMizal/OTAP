@@ -123,9 +123,9 @@ const HistoryBox = ({data, navigation, fetchHistory}) => {
                     <Text style={styles.cancelledStatus}>{data.status}</Text>
                   </View>
                 ) : (
-                  <View style={styles.completedCont}>
-                    <View style={styles.completedCircle}></View>
-                    <Text style={styles.completedStatus}>{data.status}</Text>
+                  <View style={styles.cancelledCont}>
+                    <View style={styles.cancelledCircle}></View>
+                    <Text style={styles.cancelledStatus}>{data.status}</Text>
                   </View>
                 )}
                   <TouchableOpacity style={styles.buttonClose}

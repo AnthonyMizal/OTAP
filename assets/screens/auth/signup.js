@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TouchableOpacity, ToastAndroid, Modal, TextInput, KeyboardAvoidingView, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ToastAndroid, Image, Modal, TextInput, KeyboardAvoidingView, ScrollView } from 'react-native';
 import React, {useState} from 'react';
 import { ROUTES } from '../../constants/routes';
 import {useFonts} from 'expo-font';
@@ -16,7 +16,10 @@ const Signup = (props) => {
     const [last_name, setLastname] = useState("");
     const [contact_no, setContact] = useState("");
     const [age, setAge] = useState("");
+    const [lot_no, setLot] = useState("");
+    const [street, setStreet] = useState("");
     const [barangay, setBarangay] = useState("");
+    const [landmark, setLandmark] = useState("");
     const [email, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [privacyPolicyChecked, setPrivacyPolicyChecked] = useState(false);
@@ -24,6 +27,9 @@ const Signup = (props) => {
     const [isLoading, setIsLoading] = useState(false);
     const [privacyModalVisible, setPrivacyModalVisible] = useState(false);
     const [termsModalVisible, setTermsModalVisible] = useState(false);
+    const [image, setImagePath] = useState(null);
+    const [imageName, setImageName] = useState(null);
+    const [imageType, setImageType] = useState(null);
     const [idimage, setIdImagePath] = useState(null);
     const [idimageName, setIdImageName] = useState(null);
     const [idimageType, setIdImageType] = useState(null);
@@ -52,10 +58,24 @@ const Signup = (props) => {
     const onChangeAgeHandler = (age) => {
       setAge(age);
     };
+
+    const onChangeStreetHandler = (street) => {
+      setStreet(street);
+    };
+
+    const onChangeLotHandler = (lot_no) => {
+      setLot(lot_no);
+    };
+
     const onChangeBarangayHandler = (selectedBarangay) => {
       setBarangay("");
       setBarangay(selectedBarangay);
     };
+
+    const onChangeLandmarkHandler = (landmark) => {
+      setLandmark(landmark);
+    };
+
     const onChangeUsernameHandler = (email) => {
       setUsername(email);
     };
@@ -70,6 +90,31 @@ const Signup = (props) => {
     const onTermsOfUseToggle = () => {
       setTermsOfUseChecked(!termsOfUseChecked);
     };
+
+    const addImage = async () => {
+      let _image = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.Images,
+          allowsEditing: true,
+          aspect: [4,4],
+          quality: 1,
+      });
+  
+      if (!_image.canceled) {
+    
+        setImagePath(_image.assets[0].uri);
+        setImageType(_image.assets[0].type);
+        let path = _image.assets[0].uri;
+          if (Platform.OS === "ios") {
+          path = "~" + path.substring(path.indexOf("/Documents"));
+          }
+          if (!_image.assets[0].fileName){
+              new_path = path.split("/").pop();
+          } 
+        setImageName(new_path);
+  
+        
+      }
+    }
 
     const addIdImage = async () => {
       let _image = await ImagePicker.launchImageLibraryAsync({
@@ -95,6 +140,7 @@ const Signup = (props) => {
     }
 
     const addCorImage = async () => {
+      
       let _image = await ImagePicker.launchImageLibraryAsync({
           mediaTypes: ImagePicker.MediaTypeOptions.Images,
           allowsEditing: true,
@@ -118,6 +164,39 @@ const Signup = (props) => {
     }
 
     const onSubmitFormHandler = async (event) => {
+
+      if (
+        !image ||
+        !first_name ||
+        !last_name ||
+        !age ||
+        !contact_no ||
+        !street ||
+        !barangay ||
+        !idimage ||
+        !corimage ||
+        !email ||
+        !password ||
+        !privacyPolicyChecked ||
+        !termsOfUseChecked
+      ) {
+        ToastAndroid.show(
+          'Please fill in all required fields!',
+          ToastAndroid.SHORT
+        );
+        return;
+      }
+
+      if (!/^\d+$/.test(age)) {
+        ToastAndroid.show('Age must be numeric!', ToastAndroid.SHORT);
+        return;
+      }
+  
+      if (!/^\d{11}$/.test(contact_no)) {
+        ToastAndroid.show('Contact number must be numeric and 11 characters long!', ToastAndroid.SHORT);
+        return;
+      }
+
       if (!privacyPolicyChecked || !termsOfUseChecked) {
         ToastAndroid.show(
           'Please agree to the Privacy Policy and Terms of Use',
@@ -134,9 +213,17 @@ const Signup = (props) => {
         data.append('last_name', last_name);
         data.append('age', age);
         data.append('contact_no', contact_no);
+        data.append('lot_no', lot_no);
+        data.append('street', street);
         data.append('barangay', barangay);
+        data.append('landmark', landmark);
         data.append('email', email);
         data.append('password', password);
+        data.append('profile_picture', {
+          uri: image,
+          name: imageName,
+          type: `image/${imageType}`,
+        });
         data.append('valid_id', {
           uri: idimage,
           name: idimageName,
@@ -198,6 +285,19 @@ const Signup = (props) => {
 
     <View style={styles.inputWrapper}>
 
+    <View style={pfpStyle.container}>
+                {
+                    image  && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />
+                }
+                    <View style={pfpStyle.uploadBtnContainer}>
+                        <TouchableOpacity onPress={addImage} style={pfpStyle.uploadBtn} >
+                            <Text style={styles.imageText}>{image? 'Edit' : 'Upload'} Profile Pic</Text>
+                            <AntDesign name="camera" size={20} color="black" />
+                        </TouchableOpacity>
+                        
+                    </View>
+    </View>
+
       <Text style={styles.inputLabel}>First Name:</Text>
       <TextInput style={styles.input}
       placeholderTextColor={COLORS.gray} 
@@ -224,8 +324,26 @@ const Signup = (props) => {
       onChangeText={onChangeAgeHandler}
       />
 
+      <Text style={styles.inputLabel}>Lot#:</Text>
+      <TextInput style={styles.input} placeholderTextColor={COLORS.gray} placeholder='ex. 15'
+      value={lot_no}
+      onChangeText={onChangeLotHandler}
+      />
+
+      <Text style={styles.inputLabel}>Street:</Text>
+      <TextInput style={styles.input} placeholderTextColor={COLORS.gray} placeholder='ex. Baltazar'
+      value={street}
+      onChangeText={onChangeStreetHandler}
+      />
+
       <Text style={styles.inputLabel}>Barangay:</Text>
       <DropdownComponent onSelectedValue={onChangeBarangayHandler} />
+
+      <Text style={styles.inputLabel}>Landmark:</Text>
+      <TextInput style={styles.input} placeholderTextColor={COLORS.gray} placeholder='ex. near Iglesia Church'
+      value={landmark}
+      onChangeText={onChangeLandmarkHandler}
+      />
 
       <Text style={styles.inputLabel}>Valid ID:</Text>
         <View style={imageUploaderStyles.container}>
@@ -236,7 +354,7 @@ const Signup = (props) => {
                 }
                     <View style={imageUploaderStyles.uploadBtnContainer}>
                         <TouchableOpacity onPress={addIdImage} style={imageUploaderStyles.uploadBtn} >
-                            <Text>{idimage? 'Edit' : 'Upload'} Valid ID</Text>
+                            <Text style={styles.imageText}>{idimage? 'Edit' : 'Upload'} Valid ID</Text>
                         </TouchableOpacity>
                     </View>
         </View>
@@ -250,7 +368,7 @@ const Signup = (props) => {
                 }
                     <View style={imageUploaderStyles.uploadBtnContainer}>
                         <TouchableOpacity onPress={addCorImage} style={imageUploaderStyles.uploadBtn} >
-                            <Text>{corimage? 'Edit' : 'Upload'} COR</Text>
+                            <Text style={styles.imageText}>{corimage? 'Edit' : 'Upload'} COR</Text>
                         </TouchableOpacity>
                     </View>
         </View>
@@ -416,8 +534,6 @@ const imageUploaderStyles=StyleSheet.create({
       backgroundColor:COLORS.primary,
       width:'100%',
       height:'40%',
- 
-      
   },
   uploadBtn:{
       display:'flex',
@@ -427,13 +543,44 @@ const imageUploaderStyles=StyleSheet.create({
   }
 })
 
-
+const pfpStyle=StyleSheet.create({
+  container:{
+      elevation:2,
+      height:200,
+      width:200,
+      backgroundColor:'#efefef',
+      position:'relative',
+      overflow:'hidden',
+      alignSelf: 'center',
+      borderRadius: 20,
+      marginTop: 10
+  },
+  uploadBtnContainer:{
+      opacity:0.7,
+      position:'absolute',
+      right:0,
+      bottom:0,
+      backgroundColor:COLORS.primary,
+      width:'100%',
+      height:'25%',
+  },
+  uploadBtn:{
+      display:'flex',
+      alignItems:"center",
+      justifyContent:'center'
+  }
+})
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: COLORS.white,
         alignItems: 'center',
+      },
+      imageText:{
+        fontFamily: 'CL-Bold',
+        color: COLORS.white,
+        marginTop: 6
       },
       checkboxContainer: {
         flexDirection: 'row',
