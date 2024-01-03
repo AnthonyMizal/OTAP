@@ -120,7 +120,7 @@ const Signup = (props) => {
       let _image = await ImagePicker.launchImageLibraryAsync({
           mediaTypes: ImagePicker.MediaTypeOptions.Images,
           allowsEditing: true,
-          aspect: [4,3],
+          aspect: [5,3],
           quality: 1,
       });
   
@@ -144,7 +144,7 @@ const Signup = (props) => {
       let _image = await ImagePicker.launchImageLibraryAsync({
           mediaTypes: ImagePicker.MediaTypeOptions.Images,
           allowsEditing: true,
-          aspect: [5,6],
+          aspect: [5,7],
           quality: 1,
       });
   
