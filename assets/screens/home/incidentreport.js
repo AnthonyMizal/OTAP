@@ -11,7 +11,8 @@ import { AntDesign } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DropdownComponentIncident from '../../components/dropdownincident';
 import CheckBox from 'expo-checkbox';
-
+import * as geolib from "geolib";
+import customBounds from '../../components/staritabounds';
 const IncidentReport = (props) => {
   const {navigation} = props;
   const [date, setDate] = useState(new Date());
@@ -92,6 +93,7 @@ const IncidentReport = (props) => {
   const handleTimeConfirm = (time) => {
     hideTimePicker();
     setTime(time);
+    console.log(time);
   };
 
   const onChangeDetailsHandler = (details) => {
@@ -111,15 +113,38 @@ const IncidentReport = (props) => {
 
     setIsLoading(true);
 
+    if (
+      !image ||
+      !type_of_incidents ||
+      !details ||
+      !addnotes 
+    ) {
+      ToastAndroid.show(
+        'Please fill in all required fields!',
+        ToastAndroid.SHORT
+      );
+      return;
+    }
+
+    const options = { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' };
     const formattedDate = date.toISOString().split('T')[0];
-    const formattedTime = time.toISOString().split('T')[1].substring(0, 8);
+    const formattedTime = time.toLocaleTimeString('en-US', options);
     const location = JSON.parse(await AsyncStorage.getItem('location'));
     const user_id = JSON.parse(await AsyncStorage.getItem('user_id'));
     const status = "Pending";
     
     
     try {
-      
+
+      const isInsideBounds = geolib.isPointInPolygon(
+        { latitude: location.latitude, longitude: location.longitude },
+        customBounds.map(point => ({ latitude: point.latitude, longitude: point.longitude }))
+       
+      );
+      if (!isInsideBounds) {
+        return ToastAndroid.show('You are outside the vicinity of Santa rita!', ToastAndroid.SHORT);
+      }
+
       const data = new FormData();
       data.append('file', {
         uri: image,
@@ -212,7 +237,7 @@ const IncidentReport = (props) => {
     </View>
    
     <View style={styles.inputWrapper}>
-    <Text style={styles.loginTxt3}>When Did the Incident/Emergency Happened?</Text>
+    <Text style={styles.loginTxt3}>When Did the Incident/Emergency Happened? *</Text>
       <View style={styles.dateTimeCont}>
       <TouchableOpacity onPress={showDatePicker}>
           <Text style={styles.dateTimeInput}>{date ? date.toLocaleDateString() : 'Select Date'}</Text>
@@ -230,12 +255,13 @@ const IncidentReport = (props) => {
         <DateTimePickerModal
           isVisible={isTimePickerVisible}
           mode="time"
+          is24Hour={true}
           onConfirm={handleTimeConfirm}
           onCancel={hideTimePicker}
         />
       </View>
         
-      <Text style={styles.loginTxt2}>Choose the needed responders:</Text>
+      <Text style={styles.loginTxt2}>Choose the needed responders: *</Text>
 
       <View style={styles.checkboxMainContainer}>
         <View style={styles.checkboxContainer}>
@@ -265,7 +291,7 @@ const IncidentReport = (props) => {
                 onValueChange={bpsoToggle}
               />
               <Text style={styles.checkboxLabelB}>
-                BPSO
+                BPAT
               </Text>
         </View>
       </View>
@@ -273,10 +299,10 @@ const IncidentReport = (props) => {
       
 
 
-      <Text style={styles.loginTxt2}>Choose a type of incident:</Text>
+      <Text style={styles.loginTxt2}>Choose a type of incident: *</Text>
       <DropdownComponentIncident onSelectedValue={onChangeIncidentHandler}/>
 
-      <Text style={styles.loginTxt2}>What Happened?</Text>
+      <Text style={styles.loginTxt2}>What Happened? *</Text>
         <TextInput
           style={styles.input}
           textAlignVertical="top"
@@ -286,6 +312,7 @@ const IncidentReport = (props) => {
           value={details}
           onChangeText={onChangeDetailsHandler}
         />
+        <Text style={styles.loginTxt2}>Other Notes? *</Text>
         <TextInput
           style={styles.input}
           textAlignVertical="top"

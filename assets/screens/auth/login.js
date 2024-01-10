@@ -147,6 +147,12 @@ const Login = (props) => {
     </TouchableOpacity>
 
     <View style={styles.bottomTextCont}>
+      <TouchableOpacity onPress={() => navigation.navigate(ROUTES.FORGOT_PASSWORD)}>
+      <Text style={styles.getStartedTxt2}>Forgot Password?</Text>
+      </TouchableOpacity>
+    </View>
+
+    <View style={styles.bottomTextCont}>
       <Text style={styles.getStartedTxt}>Don't have an account?</Text>
       <TouchableOpacity onPress={() => navigation.navigate(ROUTES.SIGNUP)}>
       <Text style={styles.registerTxt}>Register</Text>
@@ -154,7 +160,7 @@ const Login = (props) => {
     </View>
 
     <View style={styles.VTextCont}>
-      <Text style={styles.getStartedTxt}>v1.0.0</Text>
+      <Text style={styles.getStartedTxt}>v2.0.0</Text>
     </View>
   
     </KeyboardAvoidingView>
@@ -276,15 +282,21 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         gap: 3,
-        marginTop: 25
+        marginTop: 15
       },
       VTextCont: {
-        marginTop: 80
+        marginTop: 30
       },
       registerTxt: {
         color: COLORS.primary,
         fontFamily: 'CL-Bold',
         fontSize: 20,
+        textDecorationLine: 'underline'
+      },
+      getStartedTxt2: {
+        color: COLORS.primary,
+        fontFamily: 'CL-Bold',
+        fontSize: 17,
         textDecorationLine: 'underline'
       },
       loginTxt: {

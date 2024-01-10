@@ -9,7 +9,10 @@ export const ROUTES =  {
     PROFILE: 'Profile',
     EDIT_PROFILE: 'EditProfile',
     PROFILENAVIGATOR: 'ProfileNavigator',
-    
+    FORGOT_PASSWORD: 'ForgotPass',
+    OTP: 'Otp',
+    CHANGE_PASSWORD: 'ChangePassword',
+
     SEARCH: 'Search',
     ADDRECIPE: 'Addrecipe',
     BOOKMARK: 'Bookmark',

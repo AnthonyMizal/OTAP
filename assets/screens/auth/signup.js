@@ -36,7 +36,7 @@ const Signup = (props) => {
     const [corimage, setCorImagePath] = useState(null);
     const [corimageName, setCorImageName] = useState(null);
     const [corimageType, setCorImageType] = useState(null);
-
+    const [showPassword, setShowPassword] = useState(false);
 
     const togglePrivacyModal = () => {
       setPrivacyModalVisible(!privacyModalVisible);
@@ -45,7 +45,10 @@ const Signup = (props) => {
     const toggleTermsModal = () => {
       setTermsModalVisible(!termsModalVisible);
     };
-  
+    
+    const togglePasswordVisibility = () => {
+      setShowPassword((prevShowPassword) => !prevShowPassword);
+    };
     const onChangeFirstnameHandler = (first_name) => {
       setFirstname(first_name);
     };
@@ -298,7 +301,7 @@ const Signup = (props) => {
                     </View>
     </View>
 
-      <Text style={styles.inputLabel}>First Name:</Text>
+      <Text style={styles.inputLabel}>First Name: *</Text>
       <TextInput style={styles.input}
       placeholderTextColor={COLORS.gray} 
       placeholder='ex. John'
@@ -306,46 +309,45 @@ const Signup = (props) => {
       onChangeText={onChangeFirstnameHandler}
       />
 
-      <Text style={styles.inputLabel}>Last Name:</Text>
+      <Text style={styles.inputLabel}>Last Name: *</Text>
       <TextInput style={styles.input} placeholderTextColor={COLORS.gray} placeholder='ex. Doe'
       value={last_name}
       onChangeText={onChangeLastnameHandler}
       />
 
-      <Text style={styles.inputLabel}>Contact No.:</Text>
+      <Text style={styles.inputLabel}>Contact No.: *</Text>
       <TextInput style={styles.input} placeholderTextColor={COLORS.gray} placeholder='ex. 0912345678'
       value={contact_no}
       onChangeText={onChangeContactHandler}
       />
 
-      <Text style={styles.inputLabel}>Age:</Text>
+      <Text style={styles.inputLabel}>Age: *</Text>
       <TextInput style={styles.input} placeholderTextColor={COLORS.gray} placeholder='ex. 21'
       value={age}
       onChangeText={onChangeAgeHandler}
       />
 
-      <Text style={styles.inputLabel}>Lot#:</Text>
+      <Text style={styles.inputLabel}>Lot#: (Optional)</Text>
       <TextInput style={styles.input} placeholderTextColor={COLORS.gray} placeholder='ex. 15'
-      value={lot_no}
-      onChangeText={onChangeLotHandler}
+       
       />
 
-      <Text style={styles.inputLabel}>Street:</Text>
+      <Text style={styles.inputLabel}>Street: *</Text>
       <TextInput style={styles.input} placeholderTextColor={COLORS.gray} placeholder='ex. Baltazar'
       value={street}
       onChangeText={onChangeStreetHandler}
       />
 
-      <Text style={styles.inputLabel}>Barangay:</Text>
+      <Text style={styles.inputLabel}>Barangay: *</Text>
       <DropdownComponent onSelectedValue={onChangeBarangayHandler} />
 
-      <Text style={styles.inputLabel}>Landmark:</Text>
+      <Text style={styles.inputLabel}>Landmark: *</Text>
       <TextInput style={styles.input} placeholderTextColor={COLORS.gray} placeholder='ex. near Iglesia Church'
       value={landmark}
       onChangeText={onChangeLandmarkHandler}
       />
 
-      <Text style={styles.inputLabel}>Valid ID:</Text>
+      <Text style={styles.inputLabel}>Valid ID: *</Text>
         <View style={imageUploaderStyles.container}>
                 {
                     idimage  &&  <TextInput style={styles.input} placeholderTextColor={COLORS.gray}
@@ -359,7 +361,7 @@ const Signup = (props) => {
                     </View>
         </View>
 
-        <Text style={styles.inputLabel}>Certificate of Residency:</Text>
+        <Text style={styles.inputLabel}>Certificate of Residency: *</Text>
         <View style={imageUploaderStyles.container}>
                 {
                     corimage  &&  <TextInput style={styles.input} placeholderTextColor={COLORS.gray}
@@ -373,20 +375,46 @@ const Signup = (props) => {
                     </View>
         </View>
 
-      <Text style={styles.inputLabel}>Email:</Text>
+      <Text style={styles.inputLabel}>Email: *</Text>
       <TextInput style={styles.input} placeholderTextColor={COLORS.gray} placeholder='ex. example@gmail.com'
       value={email}
       onChangeText={onChangeUsernameHandler}
       />
 
-      <Text style={styles.inputLabel}>Password:</Text>
+      {/* <Text style={styles.inputLabel}>Password:</Text>
       <TextInput style={styles.input} placeholderTextColor={COLORS.gray} placeholder='(must contain 8 characters)'
       secureTextEntry
       value={password}
       onChangeText={onChangePasswordHandler}
-      />
+      /> */}
+<Text style={styles.inputLabel}>Password: *</Text>
+<View style={styles.passinput}>
+        <View style={styles.passinputCont}>
 
-
+             <TextInput style={styles.inputCon} placeholderTextColor={COLORS.gray} placeholder='Password'
+              secureTextEntry={!showPassword}
+              value={password}
+              onChangeText={onChangePasswordHandler}
+              />
+        </View>
+         
+          <TouchableOpacity style={styles.passtoggle} onPress={togglePasswordVisibility}>
+                {showPassword === true ? (
+                  <Icon
+                  name= 'eye-off'
+                  size={25}
+                  color={COLORS.gray}
+                  />
+                  ) : (
+                    <Icon
+                  name= 'eye'
+                  size={25}
+                  color={COLORS.gray}
+                  />
+                  )}
+          </TouchableOpacity>
+      </View>
+      
    
    <View style={styles.checkboxContainer}>
             <CheckBox
@@ -555,6 +583,7 @@ const pfpStyle=StyleSheet.create({
       borderRadius: 20,
       marginTop: 10
   },
+
   uploadBtnContainer:{
       opacity:0.7,
       position:'absolute',
@@ -581,6 +610,22 @@ const styles = StyleSheet.create({
         fontFamily: 'CL-Bold',
         color: COLORS.white,
         marginTop: 6
+      },
+      inputCon:{
+        width:'90%'
+      },
+      passinput: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        backgroundColor: COLORS.placeholderBG,
+        borderRadius: 15,
+        padding: 18,
+      },
+      passinputCont:{
+        display: 'flex',
+        flexDirection: 'row',
+        gap: 7
       },
       checkboxContainer: {
         flexDirection: 'row',

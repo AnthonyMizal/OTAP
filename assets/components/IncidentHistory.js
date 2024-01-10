@@ -93,10 +93,15 @@ const IncidentHistory = ({data, navigation, fetchIncidentHistory}) => {
                       <View style={styles.cancelledCircle}></View>
                       <Text style={styles.cancelledStatus}>{data.status}</Text>
                     </View>
-                  ) : (
+                  ) : data.status === 'Que' ? (
                     <View style={styles.cancelledCont}>
                       <View style={styles.cancelledCircle}></View>
-                      <Text style={styles.cancelledStatus}>{data.status}</Text>
+                      <Text style={styles.cancelledStatus}>INQUE</Text>
+                    </View>
+                  ) : (
+                    <View style={styles.completedCont}>
+                      <View style={styles.completedCircle}></View>
+                      <Text style={styles.completedStatus}>{data.status}</Text>
                     </View>
                   )}
                     <TouchableOpacity style={styles.buttonClose}

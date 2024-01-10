@@ -152,7 +152,7 @@ const Start = ({navigation}) => {
                     size={50}
                     color={COLORS.white}
                     />
-                    <Text style={styles.boxText}>BPSO</Text>
+                    <Text style={styles.boxText}>BPAT</Text>
                 </TouchableOpacity>
 
           </View>

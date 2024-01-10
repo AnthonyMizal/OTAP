@@ -81,7 +81,7 @@ const HistoryBox = ({data, navigation, fetchHistory}) => {
                 {data.type === 'Requesting for a Fire Truck' ? (
                   <Text style={styles.fireTxt}>You've requested a Fire Truck</Text>
                 ) : data.type === 'Requesting for a Barangay Public Safety Officer' ? (
-                  <Text style={styles.bpsoTxt}>You've requested a BPSO</Text>
+                  <Text style={styles.bpsoTxt}>You've requested a BPAT</Text>
                 ) : (
                   <Text style={styles.ambulanceTxt}>You've requested an Ambulance</Text>
                 )}
@@ -122,10 +122,15 @@ const HistoryBox = ({data, navigation, fetchHistory}) => {
                     <View style={styles.cancelledCircle}></View>
                     <Text style={styles.cancelledStatus}>{data.status}</Text>
                   </View>
-                ) : (
+                ) : data.status === 'Que' ? (
                   <View style={styles.cancelledCont}>
                     <View style={styles.cancelledCircle}></View>
-                    <Text style={styles.cancelledStatus}>{data.status}</Text>
+                    <Text style={styles.cancelledStatus}>INQUE</Text>
+                  </View>
+                ) : (
+                  <View style={styles.completedCont}>
+                    <View style={styles.completedCircle}></View>
+                    <Text style={styles.completedStatus}>{data.status}</Text>
                   </View>
                 )}
                   <TouchableOpacity style={styles.buttonClose}
@@ -138,7 +143,7 @@ const HistoryBox = ({data, navigation, fetchHistory}) => {
                 {data.type === 'Requesting for a Fire Truck' ? (
                       <Text style={styles.loginTxt2}>You've requested a Fire Truck at this location.</Text>
                     ) : data.type === 'Requesting for a Barangay Public Safety Officer' ? (
-                      <Text style={styles.loginTxt2}>You've requested a BPSO at this location.</Text>
+                      <Text style={styles.loginTxt2}>You've requested a BPAT at this location.</Text>
                     ) : (
                       <Text style={styles.loginTxt2}>You've requested an Ambulance at this location.</Text>
                     )}
