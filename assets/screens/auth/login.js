@@ -9,15 +9,15 @@ import { baseUrl } from '../../constants/url';
 import Icon from 'react-native-vector-icons/Ionicons';
 const Login = (props) => {
     const {navigation} = props;
-    const [email, setEmail] = useState("");
+    const [contact_no, setContact] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const togglePasswordVisibility = () => {
       setShowPassword((prevShowPassword) => !prevShowPassword);
     };
-    const onChangeEmailHandler = (email) => {
-      setEmail(email);
+    const onChangeContactHandler = (contact_no) => {
+      setContact(contact_no);
       };
       const onChangePasswordHandler = (password) => {
         setPassword(password);
@@ -41,13 +41,13 @@ const Login = (props) => {
       const handleLogin = async () => {
         try {
           const response = await axios.post(`${baseUrl}userlogin`, {
-            email,
+            contact_no,
             password,
           });
           if (response.status === 200) {
             ToastAndroid.show('Succesfully Logged In!', ToastAndroid.SHORT);
             const token = response.data.token;
-            setEmail('');
+            setContact('');
             setPassword('');
             AsyncStorage.setItem('user_id', JSON.stringify(response.data.user.id));
             setIsLoading(false);
@@ -63,7 +63,7 @@ const Login = (props) => {
             ToastAndroid.show('Wait for the approval of your account!', ToastAndroid.SHORT);
           }
           else if (error.response) {
-            ToastAndroid.show('Incorrect email or password!', ToastAndroid.SHORT);
+            ToastAndroid.show('Incorrect number or password!', ToastAndroid.SHORT);
           } 
           else if (error.request) {
             ToastAndroid.show('Check your internet Connection!', ToastAndroid.SHORT);
@@ -93,13 +93,15 @@ const Login = (props) => {
 
       <View style={styles.input}>
           <Icon
-            name= 'person'
+            name= 'call'
             size={25}
             color={COLORS.primary}
             />
-          <TextInput style={styles.inputCon} placeholderTextColor={COLORS.gray} placeholder='Email'
-          value={email}
-          onChangeText={onChangeEmailHandler}
+          <TextInput style={styles.inputCon} placeholderTextColor={COLORS.gray} placeholder='Contact No.'
+          value={contact_no}
+          keyboardType='numeric'
+          maxLength={11}
+          onChangeText={onChangeContactHandler}
           />
       </View>
       

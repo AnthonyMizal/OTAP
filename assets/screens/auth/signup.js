@@ -176,7 +176,6 @@ const Signup = (props) => {
         !contact_no ||
         !street ||
         !barangay ||
-        !idimage ||
         !corimage ||
         !email ||
         !password ||
@@ -318,18 +317,21 @@ const Signup = (props) => {
       <Text style={styles.inputLabel}>Contact No.: *</Text>
       <TextInput style={styles.input} placeholderTextColor={COLORS.gray} placeholder='ex. 0912345678'
       value={contact_no}
+      keyboardType='numeric'
+      maxLength={11}
       onChangeText={onChangeContactHandler}
       />
 
       <Text style={styles.inputLabel}>Age: *</Text>
       <TextInput style={styles.input} placeholderTextColor={COLORS.gray} placeholder='ex. 21'
       value={age}
+      keyboardType='numeric'
       onChangeText={onChangeAgeHandler}
       />
 
       <Text style={styles.inputLabel}>Lot#: (Optional)</Text>
       <TextInput style={styles.input} placeholderTextColor={COLORS.gray} placeholder='ex. 15'
-       
+      keyboardType='numeric'
       />
 
       <Text style={styles.inputLabel}>Street: *</Text>
@@ -347,7 +349,7 @@ const Signup = (props) => {
       onChangeText={onChangeLandmarkHandler}
       />
 
-      <Text style={styles.inputLabel}>Valid ID: *</Text>
+      <Text style={styles.inputLabel}>Valid ID: (Optional)</Text>
         <View style={imageUploaderStyles.container}>
                 {
                     idimage  &&  <TextInput style={styles.input} placeholderTextColor={COLORS.gray}
