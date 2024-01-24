@@ -83,7 +83,10 @@ const Start = ({navigation}) => {
       console.error('Request failed with status:', response.status);
     }
     } catch (error) {
-   
+
+          if (error.response.status == 400) {
+            ToastAndroid.show('Your account is banned!', ToastAndroid.SHORT);
+          }
       
     }
   };

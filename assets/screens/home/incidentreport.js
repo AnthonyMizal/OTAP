@@ -188,7 +188,9 @@ const IncidentReport = (props) => {
         throw new Error('An error has occurred');
       }
     } catch (error) {
-      alert(error);
+      if (error.response.status == 400) {
+        ToastAndroid.show('Your account is banned!', ToastAndroid.SHORT);
+      }
       setIsLoading(false);
     }
   };
@@ -463,19 +465,22 @@ const IncidentReport = (props) => {
       paddingHorizontal: 100,
       borderRadius: 50,
       width: '80%',
+      display: 'flex',
       alignItems: 'center',
-      elevation: 2
+      elevation: 2,
+      
     },
     getStartedTxt: {
       color: '#737373',
       fontFamily: 'CL-Bold',
-      fontSize: 16
+      fontSize: 16,
     },
     getStartedTxtLogin: {
       color: COLORS.white,
       fontFamily: 'CL-Bold',
       fontSize: 16,
-      width: '100%'
+      width: 200,
+      textAlign: 'center'
     },
     input: {
       backgroundColor: COLORS.placeholderBG,

@@ -6,11 +6,14 @@ import {COLORS} from '../constants/colors';
 
 const data = [
   { label: 'Fire Incident', value: 'Fire Incident' },
+  { label: 'Give Birth', value: 'Give Birth' },
+  { label: 'Patient Transfer', value: 'Patient Transfer' },
   { label: 'Rescue Operation', value: 'Rescue Operation' },
   { label: 'Medical Emergencies', value: 'Medical Emergencies' },
   { label: 'Motor Vehicle Accidents', value: 'Motor Vehicle Accidents' },
   { label: 'Criminal Activity', value: 'Criminal Activity' },
   { label: 'Public Safety Issues', value: 'Public Safety Issues' },
+  { label: 'Pedia Request', value: 'Pedia Request' },
 ];
 
 const DropdownComponentIncident = ({ onSelectedValue }) => {

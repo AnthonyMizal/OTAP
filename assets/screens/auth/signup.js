@@ -226,11 +226,15 @@ const Signup = (props) => {
           name: imageName,
           type: `image/${imageType}`,
         });
-        data.append('valid_id', {
-          uri: idimage,
-          name: idimageName,
-          type: `image/${idimageType}`,
-        });
+        
+        if (idimage != null) {
+          data.append('valid_id', {
+            uri: idimage,
+            name: idimageName,
+            type: `image/${idimageType}`,
+          });
+        };
+        
         data.append('cor', {
           uri: corimage,
           name: corimageName,
