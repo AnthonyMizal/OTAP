@@ -2,7 +2,7 @@
   "expo": {
     "name": "OTAP",
     "slug": "OTAP",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -26,7 +26,7 @@
         "googleMapsApiKey": "AIzaSyB3sNbXeLLaZQcJiCWNzC4Rwp-xALyV4lM"
       },
       "package": "com.anthonymizal.OTAP",
-      "versionCode": 5,
+      "versionCode": 7,
       "config": {
         "googleMaps": {
           "apiKey": "AIzaSyB3sNbXeLLaZQcJiCWNzC4Rwp-xALyV4lM"
@@ -38,7 +38,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": "269da8f2-f1f8-48ab-8498-a3df0880980b"
+        "projectId": "3ac41250-fd02-4455-b01e-e2ecff47a2cd"
       }
     }
   }

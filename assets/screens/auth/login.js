@@ -162,7 +162,7 @@ const Login = (props) => {
     </View>
 
     <View style={styles.VTextCont}>
-      <Text style={styles.getStartedTxt}>v2.0.0</Text>
+      <Text style={styles.getStartedTxt}>v1.1.0</Text>
     </View>
   
     </KeyboardAvoidingView>

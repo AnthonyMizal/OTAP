@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View, TouchableOpacity, Image } from "react-native";
+import { StyleSheet, View, TouchableOpacity, Image, Text } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import * as Location from "expo-location";
 import MapView, { Marker, Polygon, PROVIDER_GOOGLE } from "react-native-maps";
@@ -14,11 +14,20 @@ const YourLocation = ({ navigation }) => {
   const [currentLocation, setCurrentLocation] = useState(null);
   const [initialRegion, setInitialRegion] = useState(null);
   const [showPolygon, setShowPolygon] = useState(true);
-
+  const [locationScreen, setLocationScreen] = useState("EmergencyRequest");
 
   useEffect(() => {
     getLocation();
   }, []);
+
+
+  const CurrentLocationScreen = () => {
+    setLocationScreen("CurrentLocation");
+  };
+
+  const ChooseLocationScreen = () => {
+    setLocationScreen("IncidentRequest");
+  };
 
   const getLocation = async () => {
     let { status } = await Location.requestForegroundPermissionsAsync();
@@ -66,34 +75,36 @@ const YourLocation = ({ navigation }) => {
         </TouchableOpacity>
       </View>
       <FlashMessage position="top" />
-      {initialRegion && (
-        <MapView
-          style={styles.map}
-          initialRegion={initialRegion}
-          provider={PROVIDER_GOOGLE}
-          zoomEnabled={true}
-          zoomControlEnabled={true}
-          mapPadding={{ top: 20, right: 20 }}
-        >
-          {currentLocation && (
-            <Marker
-              coordinate={{
-                latitude: currentLocation.latitude,
-                longitude: currentLocation.longitude,
-              }}
-              title="Your Location"
-            />
-          )}
-
-          {showPolygon && (
-            <Polygon
-              coordinates={customBounds}
-              fillColor="rgba(185, 232, 172, 0.5)"
-              strokeColor="#00a82a"
-            />
-          )}
-        </MapView>
-      )}
+     
+     {initialRegion ? (
+  <MapView
+    style={styles.map}
+    initialRegion={initialRegion}
+    provider={PROVIDER_GOOGLE}
+    zoomEnabled={true}
+    zoomControlEnabled={true}
+    mapPadding={{ top: 20, right: 20 }}
+  >
+    {currentLocation && (
+      <Marker
+        coordinate={{
+          latitude: currentLocation.latitude,
+          longitude: currentLocation.longitude,
+        }}
+        title="Your Location"
+      />
+    )}
+    {showPolygon && (
+      <Polygon
+        coordinates={customBounds}
+        fillColor="rgba(185, 232, 172, 0.5)"
+        strokeColor="#00a82a"
+      />
+    )}
+  </MapView>
+) : (
+  <View><Text>Test</Text></View>
+)}
       
     </View>
   );

@@ -36,6 +36,9 @@ const Start = ({navigation}) => {
     setEmergerncy("Requesting for a Barangay Public Safety Officer");
   };
 
+  const sendFlood = () => {
+    setEmergerncy("Requesting for a Rescue(Flood)");
+  };
 
   const getLocation = async () => {
         const location = JSON.parse(await AsyncStorage.getItem('location'));
@@ -157,7 +160,20 @@ const Start = ({navigation}) => {
                     />
                     <Text style={styles.boxText}>BPAT</Text>
                 </TouchableOpacity>
-
+                <TouchableOpacity style={[styles.box4, isButtonDisabled && styles.disabledButton]} onPress={() => {
+            if (!isButtonDisabled) {
+              sendEmergency();
+              sendFlood();
+            }
+          }}
+          disabled={isButtonDisabled}>
+                    <Icon
+                    name= 'water'
+                    size={50}
+                    color={COLORS.white}
+                    />
+                    <Text style={styles.boxText}>FLOOD</Text>
+                </TouchableOpacity>
           </View>
                 
 
@@ -181,7 +197,7 @@ const Start = ({navigation}) => {
       },
       box1: {
         width: '80%',
-        height: '22%',
+        height: '16%',
         backgroundColor: '#f77777',
         borderRadius: 20,
         alignItems: 'center',
@@ -189,7 +205,7 @@ const Start = ({navigation}) => {
       },
       disabledButton:{
         width: '80%',
-        height: '22%',
+        height: '16%',
         backgroundColor: '#969696',
         borderRadius: 20,
         alignItems: 'center',
@@ -197,7 +213,7 @@ const Start = ({navigation}) => {
       },
       box2: {
         width: '80%',
-        height: '22%',
+        height: '16%',
         backgroundColor: '#f7ae77',
         borderRadius: 20,
         alignItems: 'center',
@@ -205,8 +221,16 @@ const Start = ({navigation}) => {
       },
       box3: {
         width: '80%',
-        height: '22%',
+        height: '16%',
         backgroundColor: '#77c0f7',
+        borderRadius: 20,
+        alignItems: 'center',
+        justifyContent: 'center',
+      },
+      box4: {
+        width: '80%',
+        height: '16%',
+        backgroundColor: '#69dbd4',
         borderRadius: 20,
         alignItems: 'center',
         justifyContent: 'center',

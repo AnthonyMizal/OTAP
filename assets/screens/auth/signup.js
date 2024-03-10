@@ -336,6 +336,7 @@ const Signup = (props) => {
       <Text style={styles.inputLabel}>Lot#: (Optional)</Text>
       <TextInput style={styles.input} placeholderTextColor={COLORS.gray} placeholder='ex. 15'
       keyboardType='numeric'
+      onChangeText={onChangeLotHandler}
       />
 
       <Text style={styles.inputLabel}>Street: *</Text>
@@ -521,7 +522,7 @@ const Signup = (props) => {
                   O-TAP reserves the right to modify these Terms of Use at any time, and users are encouraged to periodically review them.</Text>
                   <Text style={styles.modalTextContent}>8. Termination:
                   O-TAP retains the authority to terminate user access for any reason without prior notice.</Text>
-                  <Text style={styles.modalTextContent}>9. Cancellation Policy: Users cannot cancel their emergency assistance request if the barangay is not responding or has forwarded the request to the appropriate emergency response team.</Text>
+                  <Text style={styles.modalTextContent}>9. Cancellation Policy: Users cannot cancel their emergency assistance request if the barangay marked the request as "responding/completed".</Text>
 
                 </View>
               </ScrollView>
