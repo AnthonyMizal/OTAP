@@ -14,20 +14,25 @@ const YourLocation = ({ navigation }) => {
   const [currentLocation, setCurrentLocation] = useState(null);
   const [initialRegion, setInitialRegion] = useState(null);
   const [showPolygon, setShowPolygon] = useState(true);
-  const [locationScreen, setLocationScreen] = useState("EmergencyRequest");
+  const [locationScreen, setLocationScreen] = useState("CurrentLocation");
 
   useEffect(() => {
     getLocation();
   }, []);
 
+  useEffect(() => {
+    
+  })
 
   const CurrentLocationScreen = () => {
     setLocationScreen("CurrentLocation");
+    getLocation();
   };
 
   const ChooseLocationScreen = () => {
     setLocationScreen("IncidentRequest");
   };
+
 
   const getLocation = async () => {
     let { status } = await Location.requestForegroundPermissionsAsync();
@@ -58,42 +63,110 @@ const YourLocation = ({ navigation }) => {
       });
     }
 
+    console.log(currentLocation);
+
     // You can also include reverse geocoding logic here to get the address if needed
   };
-
+  const handleMapPress = event => {
+    const { latitude, longitude } = event.nativeEvent.coordinate;
+    setCurrentLocation({ latitude, longitude });
+    console.log(currentLocation);
+  };
   AsyncStorage.setItem("location", JSON.stringify(currentLocation));
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Image
+        {/* <Image
           style={styles.headinglogo}
           source={require("../../otapimages/header.png")}
-        />
+        /> */}
+
+
+<View style={styles.buttonMainCont}>
+      <View style={styles.buttonCont}>
+          <TouchableOpacity style={styles.buttonPage} onPress={CurrentLocationScreen}>
+          {locationScreen === "CurrentLocation" ? (
+            <View style={styles.activeButton}>
+               <Text style={styles.activeText}>Current</Text>
+            </View>
+            ) : (
+            <View style={styles.notactiveButton}>
+            <Text style={styles.notactiveText}>Current</Text>
+            </View>
+            )}  
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.buttonPage} onPress={ChooseLocationScreen}>
+          {locationScreen === "IncidentRequest" ? (
+            <View style={styles.activeButton}>
+               <Text style={styles.activeText}>Other</Text>
+            </View>
+            ) : (
+            <View style={styles.notactiveButton}>
+            <Text style={styles.notactiveText}>Other</Text>
+            </View>
+            )}  
+          </TouchableOpacity>
+        </View>
+    </View>
+
         <TouchableOpacity onPress={() => getLocation()}>
           <Icon name="compass" size={35} color={COLORS.primary} />
         </TouchableOpacity>
       </View>
       <FlashMessage position="top" />
      
-     {initialRegion ? (
-  <MapView
+
+      
+ 
+      {locationScreen === "CurrentLocation" ? (
+       
+            <MapView
+              style={styles.map}
+              initialRegion={initialRegion}
+              provider={PROVIDER_GOOGLE}
+              zoomEnabled={true}
+              zoomControlEnabled={true}
+              mapPadding={{ top: 20, right: 20 }}
+            >
+              {currentLocation && (
+                <Marker
+                  coordinate={{
+                    latitude: currentLocation.latitude,
+                    longitude: currentLocation.longitude,
+                  }}
+                  title="Your Location"
+                />
+              )}
+              {showPolygon && (
+                <Polygon
+                  coordinates={customBounds}
+                  fillColor="rgba(185, 232, 172, 0.5)"
+                  strokeColor="#00a82a"
+                />
+              )}
+            </MapView>
+       
+  ) : (
+    <MapView
     style={styles.map}
     initialRegion={initialRegion}
     provider={PROVIDER_GOOGLE}
     zoomEnabled={true}
     zoomControlEnabled={true}
     mapPadding={{ top: 20, right: 20 }}
+    onPress={handleMapPress}
   >
     {currentLocation && (
-      <Marker
-        coordinate={{
-          latitude: currentLocation.latitude,
-          longitude: currentLocation.longitude,
-        }}
-        title="Your Location"
-      />
-    )}
+            <Marker
+              coordinate={{
+                latitude: currentLocation.latitude,
+                longitude: currentLocation.longitude,
+              }}
+              title="Chosen Location"
+              pinColor={COLORS.primary} // You can customize the pin color as desired
+            />
+          )}
     {showPolygon && (
       <Polygon
         coordinates={customBounds}
@@ -102,10 +175,10 @@ const YourLocation = ({ navigation }) => {
       />
     )}
   </MapView>
-) : (
-  <View><Text>Test</Text></View>
-)}
-      
+    )}  
+
+
+
     </View>
   );
 };
@@ -130,6 +203,45 @@ const styles = StyleSheet.create({
   map: {
     width: "100%",
     height: "100%",
+  },
+
+
+  
+  activeButton:{
+    padding: 15,
+    width: '100%',
+    backgroundColor: COLORS.primary,
+    borderRadius: 50
+  },
+  notactiveButton:{
+    padding: 15,
+  },
+  activeText:{
+    color: '#fff',
+    fontFamily: 'CL-Bold',
+    fontSize: 15
+  },
+  notactiveText:{
+    color: COLORS.primary,
+    fontFamily: 'CL-Bold',
+    fontSize: 15
+  },
+  buttonCont:{
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: COLORS.placeholderBG,
+    padding: 2,
+    marginBottom: 5,
+    borderRadius: 50,
+    width: '57%',
+    
+  },
+  boxContainer: {
+    width: '100%',
+    alignItems: 'center',
+    gap: 20,
+    marginBottom: 80
   },
 });
 
